@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xc="http://www.ibm.com/xsp/custom">
+
+	<xc:appLayout>
+		<xp:this.facets>
+			<xp:panel xp:key="facetMiddle">
+				<xp:text escape="true" id="computedField1" value="Welcome to Key Dates"
+					tagName="h2">
+				</xp:text>
+			</xp:panel>
+		</xp:this.facets>
+	</xc:appLayout>
+</xp:view>
