@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+  <display-name>Key Dates</display-name>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+	</welcome-file-list>
+    <context-param>
+        <description>Vaadin production mode</description>
+        <param-name>productionMode</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+    	<param-name>osgiworlds.developermode</param-name>
+    	<param-value>true</param-value>
+    </context-param>
+	<context-param>
+		<param-name>org.openntf.osgiworlds.devtimename</param-name>
+		<param-value>CN=Micky Mouse/O=Intec-PW</param-value>
+	</context-param>
+    <context-param>
+    	<description>Location of the database containing the documents / views / forms</description>
+    	<param-name>dataDbFilePath</param-name>
+    	<param-value>XPagesSamples/KeyDates.nsf</param-value>
+    </context-param>
+    <context-param>
+    	<description>Standard Vaadin parameter, period for checking back to server</description>
+    	<param-name>heartbeatInterval</param-name>
+    	<param-value>300</param-value>
+    </context-param>
+	<session-config>
+    	<session-timeout>30</session-timeout>
+	</session-config>
+	<listener>
+		<display-name>org.atmosphere.cpr.SessionSupport</display-name>
+		<listener-class>
+			org.atmosphere.cpr.SessionSupport
+		</listener-class>
+	</listener>
+    
+    <servlet>
+        <servlet-name>KeyDatesServlet</servlet-name>
+        <servlet-class>org.openntf.osgiworlds.ODA_VaadinServlet</servlet-class>
+        <init-param>
+            <param-name>UI</param-name>
+            <param-value>uk.co.intec.keyDatesApp.MainUI</param-value>
+        </init-param>
+    </servlet> 
+
+    <servlet-mapping>
+        <servlet-name>KeyDatesServlet</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
+    
+</web-app>
