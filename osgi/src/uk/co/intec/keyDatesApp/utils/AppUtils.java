@@ -11,7 +11,7 @@ import com.vaadin.server.VaadinServlet;
 public class AppUtils {
 
 	public AppUtils() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	/**

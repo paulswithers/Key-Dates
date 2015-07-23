@@ -71,7 +71,6 @@ public class DefaultApplicationConfig extends BaseApplicationConfigurator implem
 
 		@Override
 		public Session createSession(String username) {
-			System.out.println("Username: " + username);
 			try {
 				final long userHandle = NotesUtil.createUserNameList(username);
 				final lotus.domino.Session rawSession = XSPNative.createXPageSessionExt(username, userHandle, false, true, _isFullAccess);
@@ -115,7 +114,7 @@ public class DefaultApplicationConfig extends BaseApplicationConfigurator implem
 
 		if ("true".equals(context.getInitParameter("osgiworlds.developermode"))) {
 			this._isDeveloperMode = true;
-			Factory.println("OSGIWORLDS::",
+			Factory.println("OSGIWORLDS::" + context.getServletContextName(),
 					"OsgiWorlds development mode is enabled through application property \"xworlds.developermode=true\"");
 
 			// Read the development time identity
