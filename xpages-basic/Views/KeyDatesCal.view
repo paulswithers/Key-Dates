@@ -10,8 +10,36 @@
     <datetimeformat show="datetime" date="yearmonthday" fourdigityearfor21stcentury="true" time="hourminutesecond" zone="never" dateformat="weekdaydaymonthyear" dayformat="twodigitday" monthformat="twodigitmonth" yearformat="fourdigityear" weekdayformat="shortname" dateseparator1=" " dateseparator2="/" dateseparator3="/" timeseparator=":" timeformat24="true" preference="usersetting"/>
     <numberformat format="general" punctuated="false" parens="false" percent="false" bytes="false"/>
   </column>
-  <column sort="ascending" hidedetailrows="false" itemname="title" width="17" resizable="false" separatemultiplevalues="false" sortnoaccent="false" sortnocase="true" showaslinks="false" deferindexcreation="true">
+  <column sort="ascending" hidedetailrows="false" itemname="$5" width="17" resizable="false" separatemultiplevalues="false" sortnoaccent="false" sortnocase="true" showaslinks="false" deferindexcreation="true">
     <columnheader title="Title">
+      <font size="9pt" style="bold"/>
+    </columnheader>
+    <code event="value">
+      <formula>title + " - " + customer</formula>
+    </code>
+  </column>
+  <column sort="ascending" hidedetailrows="false" itemname="title" width="17" resizable="true" separatemultiplevalues="false" sortnoaccent="false" sortnocase="true" showaslinks="false" deferindexcreation="true">
+    <columnheader title="Title">
+      <font size="9pt" style="bold"/>
+    </columnheader>
+  </column>
+  <column hidedetailrows="false" itemname="description" width="22.2500" resizable="true" separatemultiplevalues="false" sortnoaccent="false" sortnocase="true" showaslinks="false" extwindowwidth="true">
+    <columnheader title="Description">
+      <font size="9pt" style="bold"/>
+    </columnheader>
+  </column>
+  <column hidedetailrows="false" itemname="customer" width="16.2500" resizable="true" separatemultiplevalues="false" sortnoaccent="false" sortnocase="true" showaslinks="false">
+    <columnheader title="Customer">
+      <font size="9pt" style="bold"/>
+    </columnheader>
+  </column>
+  <column hidedetailrows="false" itemname="contact" width="16.2500" resizable="true" separatemultiplevalues="false" sortnoaccent="false" sortnocase="true" showaslinks="false">
+    <columnheader title="Contact">
+      <font size="9pt" style="bold"/>
+    </columnheader>
+  </column>
+  <column hidedetailrows="false" listseparator="comma" itemname="staffInvolved" width="16.2500" resizable="true" separatemultiplevalues="false" sortnoaccent="false" sortnocase="true" showaslinks="false">
+    <columnheader title="Staff">
       <font size="9pt" style="bold"/>
     </columnheader>
   </column>

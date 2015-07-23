@@ -10,9 +10,7 @@
 					<xe:this.service>
 						<xe:calendarJsonLegacyService viewName="KeyDatesCal"
 							var="ent" contentType="text/plain" colCalendarDate="date"
-							colSubject="summary">
-							<xe:this.compact><![CDATA[#{javascript:
-sessionScope.CompactJson2=="true"}]]></xe:this.compact>
+							colSubject="title">
 						</xe:calendarJsonLegacyService>
 					</xe:this.service>
 				</xe:restService>

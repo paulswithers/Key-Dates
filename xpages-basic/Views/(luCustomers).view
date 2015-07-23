@@ -3,12 +3,12 @@
   <code event="selection">
     <formula>SELECT Form="KeyDate"</formula>
   </code>
-  <column sort="ascending" hidedetailrows="false" itemname="customer" width="16.2500" resizable="true" separatemultiplevalues="false" sortnoaccent="false" sortnocase="true" showaslinks="false">
+  <column sort="ascending" hidedetailrows="false" itemname="customer" width="16.2500" resizable="true" separatemultiplevalues="true" sortnoaccent="false" sortnocase="true" showaslinks="false" categorized="true">
     <columnheader title="Customer">
       <font size="9pt" style="bold"/>
     </columnheader>
   </column>
-  <column sort="ascending" hidedetailrows="false" itemname="contact" width="16.2500" resizable="true" separatemultiplevalues="false" sortnoaccent="false" sortnocase="true" showaslinks="false">
+  <column sort="ascending" hidedetailrows="false" itemname="contact" width="16.2500" resizable="true" separatemultiplevalues="true" sortnoaccent="false" sortnocase="true" showaslinks="false" categorized="true">
     <columnheader title="Contact">
       <font size="9pt" style="bold"/>
     </columnheader>
