@@ -10,7 +10,8 @@ import org.openntf.domino.DateRange;
 import org.openntf.domino.View;
 import org.openntf.domino.ViewEntry;
 import org.openntf.domino.ViewEntryCollection;
-import org.openntf.osgiworlds.AbstractCalendarEventProvider;
+import org.openntf.osgiworlds.model.AbstractCalendarEventProvider;
+import org.openntf.osgiworlds.model.GenericDatabaseUtils;
 
 import uk.co.intec.keyDatesApp.utils.AppUtils;
 
@@ -28,9 +29,9 @@ public class KeyDateCalendarView_CalendarEventProvider extends AbstractCalendarE
 	public List<CalendarEvent> getEvents(Date sDate, Date eDate) {
 		final List<CalendarEvent> events = new ArrayList<CalendarEvent>();
 		try {
-			final Database dataDb = AppUtils.getDataDb();
+			final Database dataDb = GenericDatabaseUtils.getDataDb();
 			final View calView = dataDb.getView("keyDatesCal");
-			final DateRange dtRange = AppUtils.getUserSession().createDateRange(sDate, eDate);
+			final DateRange dtRange = GenericDatabaseUtils.getUserSession().createDateRange(sDate, eDate);
 			final ViewEntryCollection vec = calView.getAllEntriesByKey(dtRange, true);
 			for (final ViewEntry ent : vec) {
 				final BasicEvent calEnt = new BasicEvent();

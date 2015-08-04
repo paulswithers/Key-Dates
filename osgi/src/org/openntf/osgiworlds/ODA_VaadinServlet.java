@@ -42,7 +42,7 @@ public class ODA_VaadinServlet extends VaadinServlet {
 	public void startDominoThread() {
 		try {
 			Factory.initThread(Factory.STRICT_THREAD_CONFIG);
-			final DefaultApplicationConfig config = new DefaultApplicationConfig();
+			final DefaultDominoApplicationConfig config = new DefaultDominoApplicationConfig();
 			config.configure(getServletContext());
 		} catch (final Exception e) {
 			stopDominoThread();

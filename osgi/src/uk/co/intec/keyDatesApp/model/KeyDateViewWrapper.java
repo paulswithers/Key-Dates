@@ -16,6 +16,7 @@ import org.openntf.domino.ViewEntry;
 import org.openntf.domino.ViewEntryCollection;
 import org.openntf.domino.ViewNavigator;
 import org.openntf.osgiworlds.model.AbstractViewWrapper;
+import org.openntf.osgiworlds.model.GenericDatabaseUtils;
 import org.openntf.osgiworlds.model.ViewEntryWrapper;
 
 import uk.co.intec.keyDatesApp.pages.MainView;
@@ -60,13 +61,14 @@ public class KeyDateViewWrapper extends AbstractViewWrapper {
 
 	@Override
 	public Database getParentDatabase() {
-		return AppUtils.getDataDb();
+		return GenericDatabaseUtils.getDataDb();
 	}
 
 	@Override
 	public void redrawContents() {
 		final MainView view = (MainView) getParentVaadinView();
 		view.loadRowData(getEntriesAsMap());
+		view.getPager().loadPagerPagesButtons();
 	}
 
 	@Override
@@ -138,7 +140,7 @@ public class KeyDateViewWrapper extends AbstractViewWrapper {
 	}
 
 	public Map<Object, List<ViewEntryWrapper>> getEntriesByDate() {
-		final Map<Object, List<ViewEntryWrapper>> retVal_ = new HashMap<Object, List<ViewEntryWrapper>>();
+		final Map<Object, List<ViewEntryWrapper>> retVal_ = new TreeMap<Object, List<ViewEntryWrapper>>();
 		try {
 			setViewName(ViewType.BY_DATE.getValue());
 			final View dateView = getView();
@@ -190,12 +192,17 @@ public class KeyDateViewWrapper extends AbstractViewWrapper {
 				final List<Object> keys = new ArrayList<Object>();
 				keys.add(getCustomerName());
 				keys.add(createDateRangeFromStartDate());
-				final ViewEntry tmpEnt = custView.getFirstEntryByKey(keys, true);
-				if (null != tmpEnt) {
+				ent = custView.getFirstEntryByKey(keys, true);
+				if (null == ent) {
 					ent = nav.getLast();
+					if (getStart() == 1) {
+						setStart(2);
+					}
 				}
-				nav.gotoEntry(tmpEnt);
-				for (int i = 0; i <= getStart(); i++) {
+				// Can't use createViewNavFrom() and getNth(), because we don't
+				// want next customer
+				nav.gotoEntry(ent);
+				for (int i = 1; i < getStart(); i++) {
 					ent = nav.getNext();
 				}
 			}
@@ -238,8 +245,12 @@ public class KeyDateViewWrapper extends AbstractViewWrapper {
 	private DateRange createDateRangeFromStartDate() {
 		final Calendar eCal = Calendar.getInstance();
 		eCal.setTime(getStartDate());
-		eCal.add(Calendar.MONTH, 1);
-		final DateRange dtRange = AppUtils.getUserSession().createDateRange(getStartDate(), eCal.getTime());
+		if (isSingleCat()) {
+			eCal.add(Calendar.DATE, 1);
+		} else {
+			eCal.add(Calendar.MONTH, 1);
+		}
+		final DateRange dtRange = GenericDatabaseUtils.getUserSession().createDateRange(getStartDate(), eCal.getTime());
 		return dtRange;
 	}
 

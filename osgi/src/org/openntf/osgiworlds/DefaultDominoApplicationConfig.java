@@ -23,7 +23,7 @@ import com.ibm.domino.osgi.core.context.ContextInfo;
  * @author Paul Withers
  *
  */
-public class DefaultApplicationConfig extends BaseApplicationConfigurator implements ApplicationConfiguration {
+public class DefaultDominoApplicationConfig extends BaseApplicationConfigurator implements ApplicationConfiguration {
 
 	private boolean _isDeveloperMode = false;
 	private String _defaultDevelopmentUserName = null;

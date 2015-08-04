@@ -1,6 +1,6 @@
 package uk.co.intec.keyDatesApp.pages;
 
-import org.openntf.domino.Database;
+import org.openntf.osgiworlds.model.GenericDatabaseUtils;
 
 import uk.co.intec.keyDatesApp.utils.AppUtils;
 
@@ -42,15 +42,19 @@ public class HomeView extends CssLayout implements View {
 	}
 
 	public void loadContent() {
-		if ("Anonymous".equals(AppUtils.getUserSession().getEffectiveUserName())) {
+		if ("Anonymous".equals(GenericDatabaseUtils.getUserName())) {
 			final Label warning = new Label();
 			warning.setStyleName(ValoTheme.LABEL_H2);
 			warning.setStyleName(ValoTheme.LABEL_FAILURE);
 			warning.setValue("Anonymous access is not allowed on this application!");
 			addComponent(warning);
 		} else {
-			final Database dataDb = AppUtils.getDataDb();
-			if (null == dataDb) {
+			if (GenericDatabaseUtils.doesDbExist()) {
+				final Label intro = new Label();
+				intro.setStyleName(ValoTheme.LABEL_H2);
+				intro.setValue("Welcome to Key Dates OSGi Application");
+				addComponent(intro);
+			} else {
 				final Label warning = new Label();
 				warning.setStyleName(ValoTheme.LABEL_H2);
 				warning.setStyleName(ValoTheme.LABEL_FAILURE);
@@ -60,11 +64,6 @@ public class HomeView extends CssLayout implements View {
 						+ AppUtils.getDataDbFilepath()
 						+ ". Create the data database at that location or amend the 'dataDbFilePath' context parameter in WebContent > WEB-INF > web.xml of the application and issue 'restart task http' to the Domino server</li></ul>");
 				addComponent(warning);
-			} else {
-				final Label intro = new Label();
-				intro.setStyleName(ValoTheme.LABEL_H2);
-				intro.setValue("Welcome to Key Dates OSGi Application");
-				addComponent(intro);
 			}
 		}
 	}

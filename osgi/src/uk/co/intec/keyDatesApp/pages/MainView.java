@@ -7,12 +7,13 @@ import java.util.Map;
 
 import org.openntf.osgiworlds.model.ViewEntryWrapper;
 
+import uk.co.intec.keyDatesApp.components.MainViewFilter;
 import uk.co.intec.keyDatesApp.components.Pager;
 import uk.co.intec.keyDatesApp.components.Pager.Sizes;
 import uk.co.intec.keyDatesApp.model.KeyDateEntryWrapper;
 import uk.co.intec.keyDatesApp.model.KeyDateViewWrapper;
+import uk.co.intec.keyDatesApp.model.StringUtilWrapper;
 
-import com.ibm.commons.util.StringUtil;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Alignment;
@@ -30,9 +31,10 @@ public class MainView extends CssLayout implements View {
 	private static final long serialVersionUID = 1L;
 	public static final String VIEW_NAME = "ListView";
 	public static final String VIEW_LABEL = "Key Dates";
-	private static final SimpleDateFormat DATE_ONLY = new SimpleDateFormat("dd MMM yyyy");
+	public static final SimpleDateFormat DATE_ONLY = new SimpleDateFormat("dd MMM yyyy");
 	private VerticalLayout body = new VerticalLayout();
 	private KeyDateViewWrapper viewWrapper = new KeyDateViewWrapper(this);
+	private MainViewFilter filter = new MainViewFilter(this);
 	public boolean isLoaded = false;
 	private Pager pager;
 
@@ -76,7 +78,8 @@ public class MainView extends CssLayout implements View {
 			final Map<Object, List<ViewEntryWrapper>> data = viewWrapper.getEntriesAsMap();
 
 			loadRowData(data);
-			addComponents(getPager(), body);
+
+			addComponents(filter, getPager(), body);
 			setSizeFull();
 
 		} catch (final Exception e) {
@@ -90,13 +93,13 @@ public class MainView extends CssLayout implements View {
 			final Label msg = new Label("No entries found matching criteria");
 			msg.setStyleName(ValoTheme.LABEL_FAILURE);
 			body.addComponent(msg);
-			removeComponent(getPager());
 		} else {
 			for (final Object key : data.keySet()) {
 				if (key instanceof java.sql.Date) { // It will be!
 					// Add the header
 					final VerticalLayout catContainer = new VerticalLayout();
 					catContainer.addStyleName(ValoTheme.MENU_TITLE);
+					catContainer.addStyleName("category-header");
 					final Label category = new Label();
 					final java.sql.Date sqlDate = (java.sql.Date) key;
 					category.setValue(DATE_ONLY.format(sqlDate));
@@ -109,15 +112,15 @@ public class MainView extends CssLayout implements View {
 						final KeyDateEntryWrapper entry = (KeyDateEntryWrapper) veWrapped;
 						final StringBuilder suffixTitle = new StringBuilder("");
 						if (getViewWrapper().getViewName().equals(KeyDateViewWrapper.ViewType.BY_DATE)) {
-							if (StringUtil.isNotEmpty(entry.getCustomer())) {
+							if (StringUtilWrapper.isNotEmpty(entry.getCustomer())) {
 								suffixTitle.append(" (" + entry.getCustomer());
-								if (StringUtil.isNotEmpty(entry.getContact())) {
+								if (StringUtilWrapper.isNotEmpty(entry.getContact())) {
 									suffixTitle.append(" - " + entry.getContact());
 								}
 								suffixTitle.append(")");
 							}
 						} else {
-							if (StringUtil.isNotEmpty(entry.getContact())) {
+							if (StringUtilWrapper.isNotEmpty(entry.getContact())) {
 								suffixTitle.append(" - " + entry.getContact());
 							}
 						}
@@ -136,7 +139,7 @@ public class MainView extends CssLayout implements View {
 						entryRow.addComponent(title);
 
 						// Add summary, if appropriate
-						if (StringUtil.isNotEmpty(entry.getDescription())) {
+						if (StringUtilWrapper.isNotEmpty(entry.getDescription())) {
 							final Label summary = new Label(entry.getDescription());
 							summary.addStyleName(ValoTheme.LABEL_SMALL);
 							summary.addStyleName("view-desc");
@@ -147,6 +150,7 @@ public class MainView extends CssLayout implements View {
 					}
 				}
 			}
+
 		}
 	}
 
@@ -172,6 +176,14 @@ public class MainView extends CssLayout implements View {
 
 	public void setPager(Pager pager) {
 		this.pager = pager;
+	}
+
+	public MainViewFilter getFilter() {
+		return filter;
+	}
+
+	public void setFilter(MainViewFilter filter) {
+		this.filter = filter;
 	}
 
 }

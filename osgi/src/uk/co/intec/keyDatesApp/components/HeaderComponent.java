@@ -1,9 +1,8 @@
 package uk.co.intec.keyDatesApp.components;
 
-import org.openntf.domino.utils.DominoUtils;
+import org.openntf.osgiworlds.model.GenericDatabaseUtils;
 
 import uk.co.intec.keyDatesApp.MainUI;
-import uk.co.intec.keyDatesApp.utils.AppUtils;
 
 import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.HorizontalLayout;
@@ -37,6 +36,7 @@ public class HeaderComponent extends VerticalLayout {
 
 		setMenubar(new MenuBar());
 		getMenubar().setStyleName(ValoTheme.MENU_SUBTITLE);
+		getMenubar().addStyleName("valo-menu-subtitle-indent");
 		getMenubar().setWidth(100, Unit.PERCENTAGE);
 
 		if (!"Anonymous".equals(getUserName())) {
@@ -63,8 +63,7 @@ public class HeaderComponent extends VerticalLayout {
 
 	public void setUserName() {
 		try {
-			final String name = AppUtils.getUserSession().getEffectiveUserName();
-			this.userName = DominoUtils.toCommonName(name);
+			this.userName = GenericDatabaseUtils.getUserName();
 		} catch (final Exception e) {
 			this.userName = "Anonymous";
 		}

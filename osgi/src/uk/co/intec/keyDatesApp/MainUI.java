@@ -2,16 +2,15 @@ package uk.co.intec.keyDatesApp;
 
 import java.util.List;
 
-import org.openntf.domino.Database;
+import org.openntf.osgiworlds.model.GenericDatabaseUtils;
 
 import uk.co.intec.keyDatesApp.components.HeaderComponent;
+import uk.co.intec.keyDatesApp.model.StringUtilWrapper;
 import uk.co.intec.keyDatesApp.pages.CalendarView;
 import uk.co.intec.keyDatesApp.pages.ErrorView;
 import uk.co.intec.keyDatesApp.pages.HomeView;
 import uk.co.intec.keyDatesApp.pages.MainView;
-import uk.co.intec.keyDatesApp.utils.AppUtils;
 
-import com.ibm.commons.util.StringUtil;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Viewport;
 import com.vaadin.navigator.Navigator;
@@ -77,8 +76,7 @@ public class MainUI extends UI {
 			addNewMenuItem(MainView.VIEW_NAME, MainView.VIEW_LABEL, new MainView());
 			addNewMenuItem(CalendarView.VIEW_NAME, CalendarView.VIEW_LABEL, new CalendarView());
 
-			final Database dataDb = AppUtils.getDataDb();
-			if (null == dataDb || "Anonymous".equals(AppUtils.getUserSession().getEffectiveUserName())) {
+			if (!GenericDatabaseUtils.doesDbExist() || "Anonymous".equals(GenericDatabaseUtils.getUserName())) {
 				getUiNavigator().navigateTo(HomeView.VIEW_NAME);
 			}
 		} catch (final Exception e) {
@@ -96,7 +94,7 @@ public class MainUI extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				final List<MenuItem> items = getHeader().getMenubar().getItems();
 				for (final MenuItem item : items) {
-					if (StringUtil.equals("highlight", item.getStyleName())) {
+					if (StringUtilWrapper.equals("highlight", item.getStyleName())) {
 						item.setStyleName("");
 					}
 				}

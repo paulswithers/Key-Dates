@@ -136,9 +136,12 @@ public class Pager extends HorizontalLayout {
 					updatePagerPagesButtonStyles();
 				}
 			});
-			final Label spacer = new Label("|");
 			getPagerPagesButtons().put(i, pageLink);
-			getPagerPagesPanel().addComponents(pageLink, spacer);
+			getPagerPagesPanel().addComponent(pageLink);
+			if (getWrappedView().getAvailablePages() > 1) {
+				final Label spacer = new Label("|");
+				getPagerPagesPanel().addComponent(spacer);
+			}
 		}
 
 		if (getWrappedView().getAvailablePages() > 1) {

@@ -70,12 +70,18 @@
 }
 
 .valo-menu-subtitle {
-	margin: 0 0 0 5px;
 	box-sizing: none;
 	border: 0px;
 	background-color: #3b3f42;
 	background-image: none;
+	border-radius: 4px;
 	box-shadow: none;
+	margin: 0 0 5px 0;
+}
+
+.valo-menu-subtitle-indent {
+	border-radius: 0;
+	margin: 0 0 0 5px;
 }
 
 .bannerImg {
@@ -91,7 +97,15 @@
 	margin-top: 8px;
 }
 
+.v-label-failure {
+	margin-top: 8px;
+}
+
 .v-button-borderless-selected {
 	background-color: #9b9fa3;
+}
+
+.category-header {
+	border-radius: 4px;
 }
 }
