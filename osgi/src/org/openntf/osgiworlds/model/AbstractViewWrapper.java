@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.openntf.domino.Database;
 import org.openntf.domino.View;
+import org.openntf.domino.ViewEntry;
+import org.openntf.domino.ViewEntryCollection;
 import org.openntf.domino.ViewNavigator;
 
 public abstract class AbstractViewWrapper implements ViewWrapper, Serializable {
@@ -198,21 +200,44 @@ public abstract class AbstractViewWrapper implements ViewWrapper, Serializable {
 
 	@Override
 	public void calculateAvailablePages(ViewNavigator nav) {
-		if (getStart() < 2) { // We've reset (and possibly with only one page)
-			if (isEndOfView()) {
-				setAvailablePages(1);
-			} else {
-				int pageCount = 1;
-				final int maxPages = 5;
-				while (pageCount < maxPages) {
-					pageCount = pageCount + 1;
-					final int entriesOnPage = nav.skip(getCount());
-					if (getCount() > entriesOnPage) {
-						break;
-					}
+		if (isEndOfView()) {
+			setAvailablePages(1);
+		} else {
+			int pageCount = 1;
+			final int maxPages = 5;
+			while (pageCount < maxPages) {
+				// We know page 1 is fine, so just start from page 2
+				pageCount = pageCount + 1;
+				final int entriesOnPage = nav.skip(getCount());
+				if (getCount() > entriesOnPage) {
+					break;
 				}
-				setAvailablePages(pageCount);
 			}
+			if (getCurrentPage() > 3) {
+				pageCount = pageCount + getCurrentPage() - 2;
+			}
+			setAvailablePages(pageCount);
+		}
+	}
+
+	@Override
+	public void calculateAvailablePages(ViewEntryCollection ec) {
+		if (isEndOfView()) {
+			setAvailablePages(1);
+		} else {
+			int pageCount = 1;
+			int maxPages = 5;
+			if (getCurrentPage() > 3) {
+				maxPages = getCurrentPage() + 2;
+			}
+			while (pageCount < maxPages) {
+				pageCount = pageCount + 1;
+				final ViewEntry ent = ec.getNthEntry(getCount() * pageCount);
+			}
+			if (getCurrentPage() > 3) {
+				pageCount = pageCount + getCurrentPage() - 2;
+			}
+			setAvailablePages(pageCount);
 		}
 	}
 

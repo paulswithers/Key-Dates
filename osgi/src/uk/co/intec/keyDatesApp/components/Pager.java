@@ -110,7 +110,6 @@ public class Pager extends HorizontalLayout {
 					getWrappedView().setCurrentPage(getWrappedView().getCurrentPage() - 1);
 					getWrappedView().setStart(getWrappedView().getStart() - getWrappedView().getCount());
 					getWrappedView().redrawContents();
-					updatePagerPagesButtonStyles();
 				}
 			});
 			final Label spacer = new Label("|");
@@ -119,7 +118,15 @@ public class Pager extends HorizontalLayout {
 		}
 
 		// Buttons for all pages
-		for (int i = 1; i <= getWrappedView().getAvailablePages(); i++) {
+		int startPageNo = 1;
+		if (getWrappedView().getCurrentPage() > 3) {
+			if (getWrappedView().getAvailablePages() < (getWrappedView().getCurrentPage() + 2)) {
+				startPageNo = getWrappedView().getAvailablePages() - 4;
+			} else {
+				startPageNo = getWrappedView().getCurrentPage() - 2;
+			}
+		}
+		for (int i = startPageNo; i <= getWrappedView().getAvailablePages(); i++) {
 			final Button pageLink = new Button();
 			final int newPageNo = i;
 			pageLink.setCaption(Integer.toString(i));
@@ -133,7 +140,6 @@ public class Pager extends HorizontalLayout {
 					getWrappedView().setStart(1 + ((newPageNo - 1) * getWrappedView().getCount()));
 					getWrappedView().setCurrentPage(newPageNo);
 					getWrappedView().redrawContents();
-					updatePagerPagesButtonStyles();
 				}
 			});
 			getPagerPagesButtons().put(i, pageLink);
@@ -159,8 +165,6 @@ public class Pager extends HorizontalLayout {
 					getWrappedView().setCurrentPage(getWrappedView().getCurrentPage() + 1);
 					getWrappedView().setStart(getWrappedView().getStart() + getWrappedView().getCount());
 					getWrappedView().redrawContents();
-					updatePagerPagesButtonStyles();
-					// TODO: Update list of available pages
 				}
 			});
 			getPagerPagesButtons().put("Next", pageLink);

@@ -86,6 +86,9 @@ public class KeyDateViewWrapper extends AbstractViewWrapper {
 		Map<Object, List<ViewEntryWrapper>> retVal_ = new HashMap<Object, List<ViewEntryWrapper>>();
 		try {
 			boolean resetWrapper = false;
+			startDate.setHours(0);
+			startDate.setMinutes(0);
+			startDate.setSeconds(0);
 			// Have any passed values changes? If so, we need to reset start
 			if (!StringUtil.equalsIgnoreCase(custName, getCustomerName())) {
 				resetWrapper = true;
@@ -187,11 +190,27 @@ public class KeyDateViewWrapper extends AbstractViewWrapper {
 			setViewName(ViewType.BY_CUST.getValue());
 			final View custView = getView();
 			final ViewNavigator nav = custView.createViewNavFromCategory(getCustomerName());
+			ViewEntryCollection ec = null;
 			ViewEntry ent = nav.getNth(getStart());
-			if (null != getStartDate()) {
-				final List<Object> keys = new ArrayList<Object>();
-				keys.add(getCustomerName());
-				keys.add(createDateRangeFromStartDate());
+			final List<Object> keys = new ArrayList<Object>();
+			keys.add(getCustomerName());
+			keys.add(createDateRangeFromStartDate());
+			int addedRows = 0;
+			if (isSingleCat()) {
+				ec = custView.getAllEntriesByKey(keys, true);
+				ent = ec.getNthEntry(getStart());
+				if (null == ent) {
+					return null;
+				} else {
+					// Old style, because we actually want to know we still have
+					// more entries
+					while (null != ent && addedRows < getCount()) {
+						addWrappedEntryToMap(retVal_, ent);
+						addedRows = addedRows + 1;
+						ent = ec.getNextEntry();
+					}
+				}
+			} else {
 				ent = custView.getFirstEntryByKey(keys, true);
 				if (null == ent) {
 					ent = nav.getLast();
@@ -205,13 +224,11 @@ public class KeyDateViewWrapper extends AbstractViewWrapper {
 				for (int i = 1; i < getStart(); i++) {
 					ent = nav.getNext();
 				}
-			}
-			int addedRows = 0;
-			while (null != ent && addedRows < getCount()) {
-				addWrappedEntryToMap(retVal_, ent);
-				addedRows = addedRows + 1;
-
-				ent = nav.getNext();
+				while (null != ent && addedRows < getCount()) {
+					addWrappedEntryToMap(retVal_, ent);
+					addedRows = addedRows + 1;
+					ent = nav.getNext();
+				}
 			}
 			if (null == ent) {
 				setEndOfView(true);
@@ -219,7 +236,11 @@ public class KeyDateViewWrapper extends AbstractViewWrapper {
 				setEndOfView(false);
 			}
 
-			calculateAvailablePages(nav);
+			if (isSingleCat()) {
+				calculateAvailablePages(ec);
+			} else {
+				calculateAvailablePages(nav);
+			}
 		} catch (final Throwable t) {
 			AppUtils.handleException(t);
 		}

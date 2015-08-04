@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.openntf.domino.Database;
 import org.openntf.domino.View;
+import org.openntf.domino.ViewEntryCollection;
 import org.openntf.domino.ViewNavigator;
 
 public interface ViewWrapper {
@@ -72,6 +73,8 @@ public interface ViewWrapper {
 	public void setAvailablePages(int pages);
 
 	public void calculateAvailablePages(ViewNavigator nav);
+
+	public void calculateAvailablePages(ViewEntryCollection nav);
 
 	public int getCurrentPage();
 
