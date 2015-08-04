@@ -7,9 +7,9 @@
 			<xe:navigator id="navigator1" xp:key="LeftColumn">
 				<xe:this.treeNodes>
 					<xe:pageTreeNode label="Home" page="/Home.xsp"></xe:pageTreeNode>
-					<xe:pageTreeNode label="Key Dates" page="ByDate"></xe:pageTreeNode>
-					<xe:pageTreeNode label="Calendar" page="Calendar"></xe:pageTreeNode>
-					<xe:pageTreeNode label="By Customer" page="ByCustomer"></xe:pageTreeNode>
+					<xe:pageTreeNode label="Key Dates" page="/ByDate.xsp"></xe:pageTreeNode>
+					<xe:pageTreeNode label="Calendar" page="/Calendar.xsp"></xe:pageTreeNode>
+					<xe:pageTreeNode label="By Customer" page="/ByCustomer.xsp"></xe:pageTreeNode>
 				</xe:this.treeNodes>
 			</xe:navigator>
 		</xp:this.facets>

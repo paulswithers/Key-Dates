@@ -84,9 +84,8 @@
 							rendered="#{!keyDateBean.editable}" id="button4">
 							<xp:eventHandler event="onclick" submit="true"
 								refreshMode="complete">
-								<xp:this.action><![CDATA[#{javascript:print("Hello");
-pageName="KeyDate.xsp?documentId=" + keyDateBean.getNoteID() + "&action=editDocument";
-print(pageName);
+								<xp:this.action><![CDATA[#{javascript:
+pageName="KeyDate.xsp?documentId=" + keyDateBean.getUnid() + "&action=editDocument";
 context.redirectToPage(pageName)}]]></xp:this.action>
 							</xp:eventHandler>
 						</xp:button>

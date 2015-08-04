@@ -177,7 +177,7 @@ public abstract class AbstractDocumentMapModel extends AbstractMapModel {
 			Document doc = null;
 			try {
 				if (StringUtil.isEmpty(getUnid())) {
-					doc = AppUtils.getAppDb().createDocument();
+					doc = AppUtils.getDataDb().createDocument();
 					setUnid(doc.getUniversalID());
 					doc.replaceItemValue("Form", getFormName());
 				} else {

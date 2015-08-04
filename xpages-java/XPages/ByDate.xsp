@@ -37,7 +37,10 @@
 						</xp:div>
 					</xp:this.facets>
 					<xe:this.data>
-						<xp:dominoView var="view1" viewName="KeyDates"></xp:dominoView>
+						<xp:dominoView var="view1" viewName="KeyDates">
+							<xp:this.databaseName><![CDATA[${javascript:importPackage(uk.co.intec.utils);
+AppUtils.getDataDbPath();}]]></xp:this.databaseName>
+						</xp:dominoView>
 					</xe:this.data>
 					<xe:this.categoryColumn>
 						<xe:viewCategoryColumn columnName="date"></xe:viewCategoryColumn>
