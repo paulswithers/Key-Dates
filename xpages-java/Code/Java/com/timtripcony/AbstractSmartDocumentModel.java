@@ -17,21 +17,51 @@ import uk.co.intec.utils.AppUtils;
 import com.ibm.commons.util.StringUtil;
 import com.ibm.xsp.extlib.util.ExtLibUtil;
 
+/* 
+Copyright 2015 Tim Tripcony, Paul Withers
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0 
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and limitations under the License
+*/
+
 /**
- * "Borrowed" from Tim's NotesIn9 series, episodes 133-135
+ * @author Tim Tripcony, Paul Withers
  * 
- * Tim, you were a genius. You may be gone but will never be forgotten
+ *         Extension of AbstractDocumentMapModel to add "smart" functionality
  */
 public abstract class AbstractSmartDocumentModel extends AbstractDocumentMapModel {
 	private static final long serialVersionUID = 1L;
 	private boolean editMode;
 	private boolean editable; // Because I keep forgetting!!
-	private transient Document beDoc;
 
+	/**
+	 * Constructor, calling overloaded constructor and simulating DominoDocument datasource, to get default Document
+	 * based on URL
+	 */
 	public AbstractSmartDocumentModel() {
 		this(false, "", "", false);
 	}
 
+	/**
+	 * Overloaded constructor, added by PW, allowing loading based on ignoreRequestParams, requestParamPrefix documentId
+	 * and editMode URL parameter
+	 * 
+	 * @param ignoreRequestParams
+	 *            boolean whether or not to load UNID, action etc from URL parameters
+	 * @param requestParamPrefix
+	 *            String alternative requestParamPrefix for UNID, action etc URL parameters
+	 * @param documentId
+	 *            String alternative UNID / Note ID from which to load Document
+	 * @param editMode
+	 *            boolean whether or not to put the document in edit mode
+	 */
 	public AbstractSmartDocumentModel(boolean ignoreRequestParams, String requestParamPrefix, String documentId,
 			boolean editMode) {
 		super(ignoreRequestParams, requestParamPrefix, documentId);
@@ -51,16 +81,27 @@ public abstract class AbstractSmartDocumentModel extends AbstractDocumentMapMode
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.timtripcony.AbstractDocumentMapModel#load(java.lang.String)
+	 */
 	@Override
 	public void load(final String unid) {
 		super.load(unid);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.timtripcony.AbstractDocumentMapModel#initNew()
+	 */
 	@Override
 	public void initNew() {
 		super.initNew();
 	}
 
+	/**
+	 * Method to retrieve backend document
+	 * 
+	 * @return Document backend document
+	 */
 	public Document getBEDoc() {
 		Document retVal_ = null;
 		if (StringUtils.isNotEmpty(getUnid())) {
@@ -69,10 +110,16 @@ public abstract class AbstractSmartDocumentModel extends AbstractDocumentMapMode
 		return retVal_;
 	}
 
+	/**
+	 * Puts the document in edit mode
+	 */
 	public void edit() {
 		setEditMode(true);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.timtripcony.AbstractMapModel#getType(java.lang.Object)
+	 */
 	@Override
 	public Class<?> getType(final Object key) {
 		Class<?> result = null;
@@ -84,10 +131,26 @@ public abstract class AbstractSmartDocumentModel extends AbstractDocumentMapMode
 		return result;
 	}
 
+	/**
+	 * Gets a field value, casting it to a specific Java class
+	 * 
+	 * @param name
+	 *            String Item name to get value from
+	 * @param type
+	 *            Class to cast the value to
+	 * @return Item value cast to relevant Java class
+	 */
 	public <T> T getTypedValue(final String name, final Class<T> type) {
 		return type.cast(getValues().get(name));
 	}
 
+	/**
+	 * Gets a field value cast to a String, returning a blank String if the field does not exist or an error occurs
+	 * 
+	 * @param name
+	 *            String Item name to get value from
+	 * @return String value of the Item
+	 */
 	public String getStringValue(final String name) {
 		if (!hasField(name)) {
 			return "";
@@ -99,6 +162,13 @@ public abstract class AbstractSmartDocumentModel extends AbstractDocumentMapMode
 		}
 	}
 
+	/**
+	 * Gets a field value cast to a Date, returning null if the field is a String or does not exist
+	 * 
+	 * @param name
+	 *            String Item name to get value from
+	 * @return Date value of the Item
+	 */
 	public Date getDateValue(final String name) {
 		if (!hasField(name)) {
 			return null;
@@ -109,6 +179,16 @@ public abstract class AbstractSmartDocumentModel extends AbstractDocumentMapMode
 		return getTypedValue(name, Date.class);
 	}
 
+	/**
+	 * Gets a Date/Time field value as a Date, returning in date only or date and time format using {@link
+	 * AppUtils.convertDateAndTime()} or {@link AppUtils.convertDate()}
+	 * 
+	 * @param name
+	 *            String Item name to get value from
+	 * @param includeTime
+	 *            boolean whether or not to include time in the output
+	 * @return String value of the Item including just date or date/time
+	 */
 	public String getDateString(final String name, final boolean includeTime) {
 		String retVal_ = "";
 		try {
@@ -130,6 +210,13 @@ public abstract class AbstractSmartDocumentModel extends AbstractDocumentMapMode
 		return retVal_;
 	}
 
+	/**
+	 * Gets a field or multi-value field as a String, using toString() method
+	 * 
+	 * @param name
+	 *            String Item name to get value from
+	 * @return String value of the Item
+	 */
 	public String getValueAsString(final String name) {
 		String retVal_ = "";
 		try {
@@ -148,6 +235,9 @@ public abstract class AbstractSmartDocumentModel extends AbstractDocumentMapMode
 		return retVal_;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.timtripcony.AbstractMapModel#getValue(java.lang.Object)
+	 */
 	@Override
 	public Object getValue(final Object key) {
 		Object result = null;
@@ -159,10 +249,28 @@ public abstract class AbstractSmartDocumentModel extends AbstractDocumentMapMode
 		return result;
 	}
 
+	/**
+	 * Getter for editMode
+	 * 
+	 * @return boolean whether or not the Document is in edit mode
+	 */
 	public boolean isEditMode() {
 		return editMode;
 	}
 
+	/**
+	 * Setter for editMode
+	 * 
+	 * @param editMode
+	 *            boolean whether or not the Document is in edit mode
+	 */
+	public void setEditMode(final boolean editMode) {
+		this.editMode = editMode;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.timtripcony.AbstractMapModel#isReadOnly(java.lang.Object)
+	 */
 	@Override
 	public boolean isReadOnly(final Object key) {
 		boolean result = !isEditMode() || super.isReadOnly(key);
@@ -176,10 +284,9 @@ public abstract class AbstractSmartDocumentModel extends AbstractDocumentMapMode
 		return result;
 	}
 
-	public void setEditMode(final boolean editMode) {
-		this.editMode = editMode;
-	}
-
+	/* (non-Javadoc)
+	 * @see com.timtripcony.AbstractMapModel#setValue(java.lang.Object, java.lang.Object)
+	 */
 	@Override
 	public void setValue(final Object key, final Object value) {
 		try {
@@ -189,16 +296,21 @@ public abstract class AbstractSmartDocumentModel extends AbstractDocumentMapMode
 		}
 	}
 
+	/**
+	 * Getter for editable
+	 * 
+	 * @return boolean whether or not the document is in edit mode (because muscle memory makes me use "editable"
+	 */
 	public boolean isEditable() {
 		return editMode;
 	}
 
 	/**
-	 * Checks whether a text field. Remember the values of approval dates are Strings
+	 * Checks whether a text field is blank
 	 * 
 	 * @param itemName
-	 *            String sign off level to get Item name to check whether or not it's empty
-	 * @return boolean, whether blank or not
+	 *            String Item name to check whether or not it's empty
+	 * @return boolean, whether Item is blank or not
 	 */
 	public boolean isBlank(String itemName) {
 		boolean retVal_ = true;
@@ -229,10 +341,25 @@ public abstract class AbstractSmartDocumentModel extends AbstractDocumentMapMode
 		return retVal_;
 	}
 
+	/**
+	 * Checks whether a text field is blank
+	 * 
+	 * @param itemName
+	 *            String Item name to check whether or not it's empty
+	 * @return boolean, whether or not Item is <b>not</b> blank
+	 */
 	public boolean isNotBlank(String itemName) {
 		return !isBlank(itemName);
 	}
 
+	/**
+	 * Add a value or collection of values to an ArrayList
+	 * 
+	 * @param passedArr
+	 *            ArrayList<Object> to add the value to
+	 * @param value
+	 *            Object to add to the ArrayList
+	 */
 	public void addToArrayList(ArrayList<Object> passedArr, Object value) {
 		try {
 			if (null == value) {
@@ -256,6 +383,15 @@ public abstract class AbstractSmartDocumentModel extends AbstractDocumentMapMode
 		}
 	}
 
+	/**
+	 * Converts a field value to a currency string
+	 * 
+	 * @param value
+	 *            Object value to convert
+	 * @param forceDecimals
+	 *            boolean whether or the currency value should force decimals even if a whole number
+	 * @return String value as a currency
+	 */
 	public String convertToCurrency(Object value, boolean forceDecimals) {
 		String retVal_ = "";
 		try {
@@ -274,10 +410,20 @@ public abstract class AbstractSmartDocumentModel extends AbstractDocumentMapMode
 		return StringUtils.trim(retVal_);
 	}
 
+	/**
+	 * Whether or not the Document has an Item with the passed field name
+	 * 
+	 * @param fieldName
+	 *            String Item name to check for
+	 * @return boolean whether or not the Item exists in this wrapper of the Document
+	 */
 	public boolean hasField(String fieldName) {
 		return getValues().containsKey(fieldName);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.timtripcony.AbstractDocumentMapModel#setReadOnly(boolean)
+	 */
 	@Override
 	public void setReadOnly(boolean readOnly) {
 		super.setReadOnly(readOnly);
