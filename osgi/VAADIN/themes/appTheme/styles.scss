@@ -1,9 +1,17 @@
 @import "addons.scss";
 @import "appTheme.scss";
+@Import "accecss.scss";
 
 /* This file prefixes all rules with the theme name to avoid causing conflicts with other themes. */
 /* The actual styles should be defined in appTheme.scss */
 .appTheme {
   @include addons;
   @include appTheme;
+
+  @include accecss( 
+  'html body',
+  false,
+  true,
+  false
+);
 }
