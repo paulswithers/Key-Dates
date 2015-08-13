@@ -10,18 +10,33 @@ import org.openntf.domino.View;
 import org.openntf.domino.ViewEntry;
 import org.openntf.domino.ViewEntryCollection;
 
-import uk.co.intec.keyDatesApp.utils.AppUtils;
-
 import com.vaadin.sass.internal.util.StringUtil;
 import com.vaadin.ui.components.calendar.event.BasicEvent;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
 import com.vaadin.ui.components.calendar.event.CalendarEventProvider;
 
+import uk.co.intec.keyDatesApp.model.KeyDateDatabaseUtils;
+
+/**
+ * @author Paul Withers<br/>
+ *         <br/>
+ *         Basic Abstract class extending Vaadin CalendarEventProvider, for a
+ *         Domino CalendarView. <b>NOTE:</b> I have not fully tested this.
+ *
+ */
 public class AbstractCalendarEventProvider implements CalendarEventProvider {
 	private static final long serialVersionUID = 1L;
 	private Date startDate;
 	private Date endDate;
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.vaadin.ui.components.calendar.event.CalendarEventProvider#getEvents(
+	 * java.util.Date, java.util.Date)
+	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<CalendarEvent> getEvents(Date sDate, Date eDate) {
 		final List<CalendarEvent> events = new ArrayList<CalendarEvent>();
@@ -50,23 +65,45 @@ public class AbstractCalendarEventProvider implements CalendarEventProvider {
 				events.add(calEnt);
 			}
 		} catch (final Throwable t) {
-			AppUtils.handleException(t);
+			KeyDateDatabaseUtils.handleException(t);
 		}
 		return events;
 	}
 
+	/**
+	 * Getter for startDate, the date from which the Vaadin Calendar starts
+	 *
+	 * @return Date start for the current display
+	 */
 	public Date getStartDate() {
 		return startDate;
 	}
 
+	/**
+	 * Setter for startDate, the date from which the Vaadin Calendar starts
+	 *
+	 * @param startDate
+	 *            Date start date for the current display
+	 */
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
 
+	/**
+	 * Getter for endDate, the date with which the Vaadin Calendar ends
+	 *
+	 * @return Date end date for the current display
+	 */
 	public Date getEndDate() {
 		return endDate;
 	}
 
+	/**
+	 * Setter for endDate, the date with which the Vaadin Calendar ends
+	 *
+	 * @param endDate
+	 *            Date end date for the current display
+	 */
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}

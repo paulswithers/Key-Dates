@@ -13,18 +13,34 @@ import org.openntf.domino.ViewEntryCollection;
 import org.openntf.osgiworlds.model.AbstractCalendarEventProvider;
 import org.openntf.osgiworlds.model.GenericDatabaseUtils;
 
-import uk.co.intec.keyDatesApp.utils.AppUtils;
-
 import com.vaadin.ui.components.calendar.event.BasicEvent;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
 
+/**
+ * @author Paul Withers<br/>
+ *         <br/>
+ *         Extension of AbstractCalendarEventProvider to get relevant
+ *         ViewEntries and load as Vaadin CalendarEvents.
+ *
+ */
 public class KeyDateCalendarView_CalendarEventProvider extends AbstractCalendarEventProvider {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Constructor
+	 */
 	public KeyDateCalendarView_CalendarEventProvider() {
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * org.openntf.osgiworlds.model.AbstractCalendarEventProvider#getEvents(java
+	 * .util.Date, java.util.Date)
+	 */
+	@SuppressWarnings("rawtypes")
 	@Override
 	public List<CalendarEvent> getEvents(Date sDate, Date eDate) {
 		final List<CalendarEvent> events = new ArrayList<CalendarEvent>();
@@ -44,7 +60,7 @@ public class KeyDateCalendarView_CalendarEventProvider extends AbstractCalendarE
 				events.add(calEnt);
 			}
 		} catch (final Throwable t) {
-			AppUtils.handleException(t);
+			KeyDateDatabaseUtils.handleException(t);
 		}
 		// Override
 		return events;

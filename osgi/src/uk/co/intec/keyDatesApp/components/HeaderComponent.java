@@ -2,8 +2,6 @@ package uk.co.intec.keyDatesApp.components;
 
 import org.openntf.osgiworlds.model.GenericDatabaseUtils;
 
-import uk.co.intec.keyDatesApp.MainUI;
-
 import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
@@ -12,11 +10,24 @@ import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
+import uk.co.intec.keyDatesApp.MainUI;
+
+/**
+ * @author Paul Withers<br/>
+ *         <br/>
+ *         Header area of the application
+ */
 public class HeaderComponent extends VerticalLayout {
 	private static final long serialVersionUID = 1L;
 	private MenuBar menubar;
 	private String userName;
 
+	/**
+	 * Constructor, passing the Vaadin application page
+	 *
+	 * @param ui
+	 *            MainUI application page
+	 */
 	public HeaderComponent(MainUI ui) {
 		setHeight("50px");
 		setStyleName("header");
@@ -54,6 +65,11 @@ public class HeaderComponent extends VerticalLayout {
 		setSizeFull();
 	}
 
+	/**
+	 * Getter for username
+	 *
+	 * @return Retrieves the current user name
+	 */
 	public String getUserName() {
 		if (null == userName) {
 			setUserName();
@@ -61,6 +77,9 @@ public class HeaderComponent extends VerticalLayout {
 		return userName;
 	}
 
+	/**
+	 * Loads the user name
+	 */
 	public void setUserName() {
 		try {
 			this.userName = GenericDatabaseUtils.getUserName();
@@ -69,10 +88,22 @@ public class HeaderComponent extends VerticalLayout {
 		}
 	}
 
+	/**
+	 * Getter for menubar
+	 *
+	 * @return MenuBar allows external access to the menu bar created and added
+	 *         to the header
+	 */
 	public MenuBar getMenubar() {
 		return menubar;
 	}
 
+	/**
+	 * Setter for menubar
+	 *
+	 * @param menubar
+	 *            MenuBar being added to this header
+	 */
 	public void setMenubar(MenuBar menubar) {
 		this.menubar = menubar;
 	}

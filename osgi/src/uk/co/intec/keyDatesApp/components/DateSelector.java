@@ -5,8 +5,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-import uk.co.intec.keyDatesApp.utils.AppUtils;
-
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Alignment;
@@ -24,6 +22,19 @@ import com.vaadin.ui.components.calendar.handler.BasicDateClickHandler;
 import com.vaadin.ui.components.calendar.handler.BasicWeekClickHandler;
 import com.vaadin.ui.themes.ValoTheme;
 
+import uk.co.intec.keyDatesApp.model.KeyDateDatabaseUtils;
+
+/**
+ * @author Paul Withers<br/>
+ *         <br/>
+ *         Navigation buttons for Calendar component, extended from Vaadin
+ *         example, to be found here:
+ *         https://dev.vaadin.com/git/?p=addons/calendar/calendar.git;a=tree;f=
+ *         demo/src/com/vaadin/addon/calendar/demo;h=
+ *         2e801aaff657193b6fc3cd893316821dc6a44dec;hb=
+ *         251b9e563e341e00be105c9c2f6c451fa33c633e
+ *
+ */
 public class DateSelector extends VerticalLayout {
 	private static final long serialVersionUID = 1L;
 	private Calendar calLayout;
@@ -36,18 +47,40 @@ public class DateSelector extends VerticalLayout {
 	private Button prevButton;
 	private Mode viewMode = Mode.MONTH;
 
+	/**
+	 * @author Paul Withers
+	 *
+	 *         Enum for calendar mode - MONTH, WEEK, DAY
+	 */
 	private enum Mode {
 		MONTH, WEEK, DAY;
 	}
 
+	/**
+	 * Getter for calLayout
+	 *
+	 * @return Calendar Vaadin calendar component
+	 */
 	public Calendar getCalLayout() {
 		return calLayout;
 	}
 
+	/**
+	 * Setter for calLayout
+	 *
+	 * @param calLayout
+	 *            Calendar Vaadin calendar component this selector is tied to
+	 */
 	public void setCalLayout(Calendar calLayout) {
 		this.calLayout = calLayout;
 	}
 
+	/**
+	 * Constructor, passing the Vaadin Calendar component this selector is tied
+	 * to
+	 *
+	 * @param cal
+	 */
 	public DateSelector(Calendar cal) {
 		try {
 			setLocale(Locale.getDefault());
@@ -89,15 +122,27 @@ public class DateSelector extends VerticalLayout {
 			weekButton.setVisible(viewMode == Mode.DAY);
 			addComponent(hl);
 		} catch (final Throwable t) {
-			AppUtils.handleException(t);
+			KeyDateDatabaseUtils.handleException(t);
 		}
 	}
 
+	/**
+	 * Adds event listeners to extend default Vaadin Calendar functionality when
+	 * the user clicks on a week number or date
+	 */
 	@SuppressWarnings("serial")
 	private void addCalendarEventListeners() {
 		// Register week clicks by changing the schedules start and end dates.
 		getCalLayout().setHandler(new BasicWeekClickHandler() {
 
+			/*
+			 * (non-Javadoc)
+			 *
+			 * @see
+			 * com.vaadin.ui.components.calendar.handler.BasicWeekClickHandler#
+			 * weekClick(com.vaadin.ui.components.calendar.
+			 * CalendarComponentEvents.WeekClick)
+			 */
 			@Override
 			public void weekClick(WeekClick event) {
 				// let BasicWeekClickHandler handle calendar dates, and update
@@ -111,6 +156,14 @@ public class DateSelector extends VerticalLayout {
 
 		getCalLayout().setHandler(new BasicDateClickHandler() {
 
+			/*
+			 * (non-Javadoc)
+			 *
+			 * @see
+			 * com.vaadin.ui.components.calendar.handler.BasicDateClickHandler#
+			 * dateClick(com.vaadin.ui.components.calendar.
+			 * CalendarComponentEvents.DateClickEvent)
+			 */
 			@Override
 			public void dateClick(DateClickEvent event) {
 				// let BasicDateClickHandler handle calendar dates, and update
@@ -122,6 +175,10 @@ public class DateSelector extends VerticalLayout {
 		});
 	}
 
+	/**
+	 * Adds additional navigation buttons for Month view, Week view, Next and
+	 * Prev
+	 */
 	private void initNavigationButtons() {
 		monthButton = new Button("Month view");
 		monthButton.addStyleName(ValoTheme.BUTTON_QUIET);
@@ -130,6 +187,13 @@ public class DateSelector extends VerticalLayout {
 
 			private static final long serialVersionUID = 1L;
 
+			/*
+			 * (non-Javadoc)
+			 *
+			 * @see
+			 * com.vaadin.ui.Button.ClickListener#buttonClick(com.vaadin.ui.
+			 * Button.ClickEvent)
+			 */
 			@Override
 			public void buttonClick(ClickEvent event) {
 				switchToMonthView();
@@ -143,12 +207,18 @@ public class DateSelector extends VerticalLayout {
 
 			private static final long serialVersionUID = 1L;
 
+			/*
+			 * (non-Javadoc)
+			 *
+			 * @see
+			 * com.vaadin.ui.Button.ClickListener#buttonClick(com.vaadin.ui.
+			 * Button.ClickEvent)
+			 */
 			@Override
 			public void buttonClick(ClickEvent event) {
 				// simulate week click
 				final WeekClickHandler handler = (WeekClickHandler) getCalLayout().getHandler(WeekClick.EVENT_ID);
-				handler.weekClick(new WeekClick(getCalLayout(), calendar.get(GregorianCalendar.WEEK_OF_YEAR), calendar
-						.get(GregorianCalendar.YEAR)));
+				handler.weekClick(new WeekClick(getCalLayout(), calendar.get(GregorianCalendar.WEEK_OF_YEAR), calendar.get(GregorianCalendar.YEAR)));
 			}
 		});
 
@@ -158,6 +228,13 @@ public class DateSelector extends VerticalLayout {
 		prevButton.addClickListener(new Button.ClickListener() {
 			private static final long serialVersionUID = 1L;
 
+			/*
+			 * (non-Javadoc)
+			 *
+			 * @see
+			 * com.vaadin.ui.Button.ClickListener#buttonClick(com.vaadin.ui.
+			 * Button.ClickEvent)
+			 */
 			@Override
 			public void buttonClick(ClickEvent event) {
 				handlePreviousButtonClick();
@@ -171,6 +248,13 @@ public class DateSelector extends VerticalLayout {
 		nextButton.addClickListener(new Button.ClickListener() {
 			private static final long serialVersionUID = 1L;
 
+			/*
+			 * (non-Javadoc)
+			 *
+			 * @see
+			 * com.vaadin.ui.Button.ClickListener#buttonClick(com.vaadin.ui.
+			 * Button.ClickEvent)
+			 */
 			@Override
 			public void buttonClick(ClickEvent event) {
 				handleNextButtonClick();
@@ -178,6 +262,10 @@ public class DateSelector extends VerticalLayout {
 		});
 	}
 
+	/**
+	 * Handle what should happen when Next button is clicked, depending on
+	 * current Mode (DAY, WEEK, MONTH)
+	 */
 	private void handleNextButtonClick() {
 		switch (viewMode) {
 		case MONTH:
@@ -192,6 +280,10 @@ public class DateSelector extends VerticalLayout {
 		}
 	}
 
+	/**
+	 * Handle what should happen when Prev button is clicked, depending on
+	 * current Mode (DAY, WEEK, MONTH)
+	 */
 	private void handlePreviousButtonClick() {
 		switch (viewMode) {
 		case MONTH:
@@ -206,30 +298,56 @@ public class DateSelector extends VerticalLayout {
 		}
 	}
 
+	/**
+	 * Roll month forward by one
+	 */
 	private void nextMonth() {
 		rollMonth(1);
 	}
 
+	/**
+	 * Roll month back by one
+	 */
 	private void previousMonth() {
 		rollMonth(-1);
 	}
 
+	/**
+	 * Roll week forward by one
+	 */
 	private void nextWeek() {
 		rollWeek(1);
 	}
 
+	/**
+	 * Roll week back by one
+	 */
 	private void previousWeek() {
 		rollWeek(-1);
 	}
 
+	/**
+	 * Roll day forward by one
+	 */
 	private void nextDay() {
 		rollDate(1);
 	}
 
+	/**
+	 * Roll day back by one
+	 */
 	private void previousDay() {
 		rollDate(-1);
 	}
 
+	/**
+	 * Roll month in a specific direction, updating start date of Vaadin
+	 * Calendar component, updating caption label in the middle of the selector
+	 * and resetting the calendar time
+	 *
+	 * @param direction
+	 *            int direction, 1 for forward or -1 for backward
+	 */
 	private void rollMonth(int direction) {
 		calendar.setTime(currentMonthsFirstDate);
 		calendar.add(GregorianCalendar.MONTH, direction);
@@ -244,6 +362,13 @@ public class DateSelector extends VerticalLayout {
 		resetCalendarTime(true);
 	}
 
+	/**
+	 * Roll week in a specific direction, updating start date of Vaadin Calendar
+	 * component and resetting the calendar time
+	 *
+	 * @param direction
+	 *            int direction, 1 for forward or -1 for backward
+	 */
 	private void rollWeek(int direction) {
 		calendar.add(GregorianCalendar.WEEK_OF_YEAR, direction);
 		calendar.set(GregorianCalendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
@@ -253,12 +378,22 @@ public class DateSelector extends VerticalLayout {
 		getCalLayout().setEndDate(calendar.getTime());
 	}
 
+	/**
+	 * Roll date in a specific direction, updating start date of Vaadin Calendar
+	 * component and resetting the calendar time
+	 *
+	 * @param direction
+	 *            int direction, 1 for forward or -1 for backward
+	 */
 	private void rollDate(int direction) {
 		calendar.add(GregorianCalendar.DATE, direction);
 		resetCalendarTime(false);
 		resetCalendarTime(true);
 	}
 
+	/**
+	 * Update the month label in the middle of the selector
+	 */
 	private void updateCaptionLabel() {
 		final DateFormatSymbols s = new DateFormatSymbols(getLocale());
 		final String month = s.getShortMonths()[calendar.get(GregorianCalendar.MONTH)];
@@ -302,6 +437,13 @@ public class DateSelector extends VerticalLayout {
 		weekButton.setVisible(true);
 	}
 
+	/**
+	 * Amend either the end time or the start time of the Vaadin Calendar
+	 * component the selector is bound to
+	 *
+	 * @param resetEndTime
+	 *            boolean whether or not to reset the end time
+	 */
 	private void resetCalendarTime(boolean resetEndTime) {
 		resetTime(resetEndTime);
 		if (resetEndTime) {

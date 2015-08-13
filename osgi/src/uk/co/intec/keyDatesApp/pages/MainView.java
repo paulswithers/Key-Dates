@@ -1,18 +1,10 @@
 package uk.co.intec.keyDatesApp.pages;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.openntf.osgiworlds.model.ViewEntryWrapper;
-
-import uk.co.intec.keyDatesApp.components.MainViewFilter;
-import uk.co.intec.keyDatesApp.components.Pager;
-import uk.co.intec.keyDatesApp.components.Pager.Sizes;
-import uk.co.intec.keyDatesApp.model.KeyDateEntryWrapper;
-import uk.co.intec.keyDatesApp.model.KeyDateViewWrapper;
-import uk.co.intec.keyDatesApp.model.StringUtilWrapper;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -27,44 +19,69 @@ import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
+import uk.co.intec.keyDatesApp.components.MainViewFilter;
+import uk.co.intec.keyDatesApp.components.Pager;
+import uk.co.intec.keyDatesApp.model.KeyDateEntryWrapper;
+import uk.co.intec.keyDatesApp.model.KeyDateViewWrapper;
+import uk.co.intec.keyDatesApp.model.StringUtilWrapper;
+
+/**
+ * @author Paul Withers<br/>
+ *         <br/>
+ *         Main view page including view filter (which provides faceted search
+ *         of fields), pager, and navigable view.
+ *
+ */
 public class MainView extends CssLayout implements View {
 	private static final long serialVersionUID = 1L;
 	public static final String VIEW_NAME = "ListView";
 	public static final String VIEW_LABEL = "Key Dates";
 	public static final SimpleDateFormat DATE_ONLY = new SimpleDateFormat("dd MMM yyyy");
-	private VerticalLayout body = new VerticalLayout();
+	private final VerticalLayout body = new VerticalLayout();
 	private KeyDateViewWrapper viewWrapper = new KeyDateViewWrapper(this);
 	private MainViewFilter filter = new MainViewFilter(this);
-	public boolean isLoaded = false;
+	public boolean loaded = false;
 	private Pager pager;
 
+	/**
+	 * Constructor, sets CssLayout to take full area
+	 */
 	public MainView() {
 
 		setSizeFull();
 
 	}
 
+	/**
+	 * Shows an error message on the screen
+	 *
+	 * @param msg
+	 *            String error to display
+	 */
 	public void showError(String msg) {
 		Notification.show(msg, Type.ERROR_MESSAGE);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * com.vaadin.navigator.View#enter(com.vaadin.navigator.ViewChangeListener.
+	 * ViewChangeEvent)
+	 */
 	@Override
 	public void enter(ViewChangeEvent event) {
 		try {
-			if (!isLoaded) {
+			if (!isLoaded()) {
 				body.setDefaultComponentAlignment(Alignment.TOP_LEFT);
 
-				final ArrayList<Sizes> availSizes = new ArrayList<Sizes>();
-				availSizes.add(Sizes.FIVE);
-				availSizes.add(Sizes.TEN);
-				availSizes.add(Sizes.TWENTY_FIVE);
-				final Pager newPager = new Pager(viewWrapper, availSizes);
+				final Pager newPager = new Pager(viewWrapper, null);
 				newPager.loadContent();
 				setPager(newPager);
 
 				loadContent();
 				getPager().loadPagerPagesButtons();
-				isLoaded = true;
+				setLoaded(true);
 			}
 
 		} catch (final Exception e) {
@@ -72,6 +89,11 @@ public class MainView extends CssLayout implements View {
 		}
 	}
 
+	/**
+	 * Loads the main content for the page. Only called on first entry to the
+	 * page, because calling method sets <i>isLoaded</i> to true after
+	 * successfully completing.
+	 */
 	public void loadContent() {
 		try {
 			viewWrapper.setStartDate(new java.util.Date());
@@ -87,9 +109,21 @@ public class MainView extends CssLayout implements View {
 		}
 	}
 
+	/**
+	 * Removes any existing row data loaded to the page and loads
+	 * ViewEntryWrappers passed to this method. If no entries were passed to the
+	 * method, the message "No entries found matching criteria" is displayed.
+	 * Otherwise writes the entries to the page, grouped under the date each Key
+	 * Date is for.
+	 *
+	 * @param data
+	 *            Map of data where key is a java.sql.Date (so does not include
+	 *            a time element) and value is the wrapped ViewEntries for that
+	 *            date.
+	 */
 	public void loadRowData(final Map<Object, List<ViewEntryWrapper>> data) {
 		body.removeAllComponents();
-		if (data.isEmpty()) {
+		if (null == data || data.isEmpty()) {
 			final Label msg = new Label("No entries found matching criteria");
 			msg.setStyleName(ValoTheme.LABEL_FAILURE);
 			body.addComponent(msg);
@@ -154,36 +188,82 @@ public class MainView extends CssLayout implements View {
 		}
 	}
 
-	public VerticalLayout getContainer() {
-		return body;
-	}
-
-	public void setContainer(VerticalLayout container) {
-		this.body = container;
-	}
-
+	/**
+	 * Getter for viewWrapper
+	 *
+	 * @return KeyDateViewWrapper that wraps the backend views used by this page
+	 */
 	public KeyDateViewWrapper getViewWrapper() {
 		return viewWrapper;
 	}
 
+	/**
+	 * Setter for viewWrapper
+	 *
+	 * @param viewWrapper
+	 *            KeyDateViewWrapper that wraps the backend views used by this
+	 *            page
+	 */
 	public void setViewWrapper(KeyDateViewWrapper viewWrapper) {
 		this.viewWrapper = viewWrapper;
 	}
 
+	/**
+	 * Getter for pager
+	 *
+	 * @return Pager to be displayed above the view container
+	 */
 	public Pager getPager() {
 		return pager;
 	}
 
+	/**
+	 * Setter for pager
+	 *
+	 * @param pager
+	 *            Pager to be displayed above the view container
+	 */
 	public void setPager(Pager pager) {
 		this.pager = pager;
 	}
 
+	/**
+	 * Getter for filter
+	 *
+	 * @return MainViewFilter that allows filtering of contents of viewWrapper
+	 */
 	public MainViewFilter getFilter() {
 		return filter;
 	}
 
+	/**
+	 * Setter for filter
+	 *
+	 * @param filter
+	 *            MainViewFilter that allows filtering of the contents of the
+	 *            viewWrapper
+	 */
 	public void setFilter(MainViewFilter filter) {
 		this.filter = filter;
+	}
+
+	/**
+	 * Getter for loaded
+	 *
+	 * @return boolean whether the content has already been loaded
+	 */
+	public boolean isLoaded() {
+		return loaded;
+	}
+
+	/**
+	 * Setter for loaded
+	 *
+	 * @param loaded
+	 *            boolean whether or not the content has already been loaded
+	 */
+	public void setLoaded(boolean loaded) {
+		this.loaded = loaded;
 	}
 
 }

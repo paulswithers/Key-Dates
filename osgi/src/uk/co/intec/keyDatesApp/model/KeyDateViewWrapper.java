@@ -19,20 +19,25 @@ import org.openntf.osgiworlds.model.AbstractViewWrapper;
 import org.openntf.osgiworlds.model.GenericDatabaseUtils;
 import org.openntf.osgiworlds.model.ViewEntryWrapper;
 
-import uk.co.intec.keyDatesApp.pages.MainView;
-import uk.co.intec.keyDatesApp.utils.AppUtils;
-
 import com.ibm.commons.util.StringUtil;
 
+import uk.co.intec.keyDatesApp.pages.MainView;
+
 /**
- * @author withersp
- *
+ * @author Paul Withers<br/>
+ *         <br/>
+ *         Wrapper for Key Date views
  */
 public class KeyDateViewWrapper extends AbstractViewWrapper {
 	private static final long serialVersionUID = 1L;
 	private String customerName;
 	private Date startDate;
 
+	/**
+	 * @author Paul Withers<br/>
+	 *         <br/>
+	 *         Enum mapping to the underlying View names, to avoid typos
+	 */
 	public enum ViewType {
 		BY_DATE("keyDatesCal"), BY_CUST("KeyDatesByCust");
 
@@ -47,23 +52,43 @@ public class KeyDateViewWrapper extends AbstractViewWrapper {
 		}
 	}
 
+	/**
+	 * Constructor, defaulting to keyDatesCal view (we're categorising
+	 * on-the-fly, so we can use the Calendar view) and no customer restriction.
+	 */
 	public KeyDateViewWrapper() {
 		super();
 		setViewName(ViewType.BY_DATE.getValue());
 		setCustomerName("");
 	}
 
+	/**
+	 * Overloaded constructor, additionally loading the page into this wrapper.
+	 *
+	 * @param parentView
+	 *            com.vaadin.navigator.View page displayed
+	 */
 	public KeyDateViewWrapper(com.vaadin.navigator.View parentView) {
 		super(parentView);
 		setViewName(ViewType.BY_DATE.getValue());
 		setCustomerName("");
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.openntf.osgiworlds.model.AbstractViewWrapper#getParentDatabase()
+	 */
 	@Override
 	public Database getParentDatabase() {
 		return GenericDatabaseUtils.getDataDb();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.openntf.osgiworlds.model.AbstractViewWrapper#redrawContents()
+	 */
 	@Override
 	public void redrawContents() {
 		final MainView view = (MainView) getParentVaadinView();
@@ -71,17 +96,43 @@ public class KeyDateViewWrapper extends AbstractViewWrapper {
 		view.getPager().loadPagerPagesButtons();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.openntf.osgiworlds.model.AbstractViewWrapper#getEntries()
+	 */
 	@Override
 	public List<ViewEntryWrapper> getEntries() {
 		// NOT IN USE!!!
 		return super.getEntries();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.openntf.osgiworlds.model.AbstractViewWrapper#getEntriesAsMap()
+	 */
 	@Override
 	public Map<Object, List<ViewEntryWrapper>> getEntriesAsMap() {
 		return getEntriesAsMap(getCustomerName(), getStartDate(), isSingleCat(), getCount());
 	}
 
+	/**
+	 * Overloaded version of getEntriesAsMap() passing in the customer name,
+	 * start date, whether or not to restrict only to entries for that date and
+	 * customer, and number of rows to display at a time.
+	 *
+	 * @param custName
+	 *            String customer name to restrict the wrapper to
+	 * @param startDate
+	 *            Date start date to restrict the wrapper to
+	 * @param single
+	 *            boolean whether or not to only display matches
+	 * @param rows
+	 *            int number of ViewEntries to display
+	 * @return Map of KeyDateEntryWrappers to display to the user
+	 */
+	@SuppressWarnings("deprecation")
 	public Map<Object, List<ViewEntryWrapper>> getEntriesAsMap(String custName, Date startDate, boolean single, int rows) {
 		Map<Object, List<ViewEntryWrapper>> retVal_ = new HashMap<Object, List<ViewEntryWrapper>>();
 		try {
@@ -95,9 +146,7 @@ public class KeyDateViewWrapper extends AbstractViewWrapper {
 			} else if (single != isSingleCat()) {
 				resetWrapper = true;
 			} else {
-				if (null == getStartDate() && null == startDate) {
-					// Don't need to check anything
-				} else if (null == getStartDate() && null != startDate) {
+				if (null == getStartDate() && null != startDate) {
 					resetWrapper = true;
 				} else if (null != getStartDate() && null == startDate) {
 					resetWrapper = true;
@@ -137,11 +186,23 @@ public class KeyDateViewWrapper extends AbstractViewWrapper {
 				retVal_ = getEntriesByCustomer();
 			}
 		} catch (final Throwable t) {
-			AppUtils.handleException(t);
+			KeyDateDatabaseUtils.handleException(t);
 		}
 		return retVal_;
 	}
 
+	/**
+	 * Get entries only based on a passed date. createDateRangeFromStartDate
+	 * handles getting just selected date or all from selected date.<br/>
+	 * <br/>
+	 * If there are no entries after the selected date, just abort.<br/>
+	 * <br/>
+	 * Otherwise, load <i>count</i> entries into the wrapper. If there are fewer
+	 * entries than <i>count</i> in the view, set <i>endOfView</i> to true.
+	 * Also, recalculate the available pages.
+	 *
+	 * @return Map of KeyDateEntryWrappers to display to the user
+	 */
 	public Map<Object, List<ViewEntryWrapper>> getEntriesByDate() {
 		final Map<Object, List<ViewEntryWrapper>> retVal_ = new TreeMap<Object, List<ViewEntryWrapper>>();
 		try {
@@ -149,18 +210,13 @@ public class KeyDateViewWrapper extends AbstractViewWrapper {
 			final View dateView = getView();
 			ViewNavigator nav = dateView.createViewNav();
 			// Get first entry for the relevant start date, or go to last
-			if (null != getStartDate()) {
-				final DateRange dtRange = createDateRangeFromStartDate();
-				final ViewEntryCollection vec = dateView.getAllEntriesByKey(dtRange, true);
-				ViewEntry tmpEnt = vec.getFirstEntry();
-				if (null == tmpEnt) {
-					tmpEnt = nav.getLast();
-					if (getStart() == 1) {
-						setStart(2);
-					}
-				}
-				nav = dateView.createViewNavFrom(tmpEnt);
+			final DateRange dtRange = createDateRangeFromStartDate();
+			final ViewEntryCollection vec = dateView.getAllEntriesByKey(dtRange, true);
+			final ViewEntry tmpEnt = vec.getFirstEntry();
+			if (null == tmpEnt) {
+				return null;
 			}
+			nav = dateView.createViewNavFrom(tmpEnt);
 			ViewEntry ent = nav.getNth(getStart());
 			int addedRows = 0;
 			while (null != ent && addedRows < getCount()) {
@@ -178,11 +234,29 @@ public class KeyDateViewWrapper extends AbstractViewWrapper {
 
 			calculateAvailablePages(nav);
 		} catch (final Throwable t) {
-			AppUtils.handleException(t);
+			KeyDateDatabaseUtils.handleException(t);
 		}
 		return retVal_;
 	}
 
+	/**
+	 * Get entries based on customer and date (date is always set). If
+	 * "Restrict to Date" is selected on the browser (isSingleCat=true), then
+	 * only get entries for the selected date, otherwise for a year into the
+	 * future.<br/>
+	 * <br/>
+	 * If isSingleCat and there are none that match, just abort.<br/>
+	 * <br/>
+	 * Otherwise, get the entries for selected customer starting from selected
+	 * date. If there are none after selected date, also just abort.<br/>
+	 * <br/>
+	 * Otherwise, load <i>count</i> entries into the wrapper. If there are fewer
+	 * entries than <i>count</i> in the view, set <i>endOfView</i> to true.
+	 * Also, recalculate the available pages.
+	 *
+	 * @return of KeyDateEntryWrappers to display to the user
+	 */
+	@SuppressWarnings("deprecation")
 	public Map<Object, List<ViewEntryWrapper>> getEntriesByCustomer() {
 		// View is sorted DESCENDING, so use TreeMap to sort ASCENDING
 		final Map<Object, List<ViewEntryWrapper>> retVal_ = new TreeMap<Object, List<ViewEntryWrapper>>();
@@ -202,8 +276,8 @@ public class KeyDateViewWrapper extends AbstractViewWrapper {
 				if (null == ent) {
 					return null;
 				} else {
-					// Old style, because we actually want to know we still have
-					// more entries
+					// Old style while loop, because we actually want to know we
+					// still have more entries
 					while (null != ent && addedRows < getCount()) {
 						addWrappedEntryToMap(retVal_, ent);
 						addedRows = addedRows + 1;
@@ -213,10 +287,7 @@ public class KeyDateViewWrapper extends AbstractViewWrapper {
 			} else {
 				ent = custView.getFirstEntryByKey(keys, true);
 				if (null == ent) {
-					ent = nav.getLast();
-					if (getStart() == 1) {
-						setStart(2);
-					}
+					return null;
 				}
 				// Can't use createViewNavFrom() and getNth(), because we don't
 				// want next customer
@@ -242,11 +313,19 @@ public class KeyDateViewWrapper extends AbstractViewWrapper {
 				calculateAvailablePages(nav);
 			}
 		} catch (final Throwable t) {
-			AppUtils.handleException(t);
+			KeyDateDatabaseUtils.handleException(t);
 		}
 		return retVal_;
 	}
 
+	/**
+	 * Method to create a KeyDateEntryWrapper and add it to the map.
+	 *
+	 * @param retVal_
+	 *            Map to add the entry to
+	 * @param ent
+	 *            ViewEntry to wrap
+	 */
 	private void addWrappedEntryToMap(final Map<Object, List<ViewEntryWrapper>> retVal_, ViewEntry ent) {
 		final KeyDateEntryWrapper entWrapper = new KeyDateEntryWrapper();
 		entWrapper.setEventDate((Date) ent.getColumnValue("date"));
@@ -263,30 +342,59 @@ public class KeyDateViewWrapper extends AbstractViewWrapper {
 		retVal_.put(mapDate, dateEntries);
 	}
 
+	/**
+	 * Creates a DateRange based on the start date, extending either a single
+	 * day or a month. The DateRange is then used to restrict the wrapper's
+	 * contents.
+	 *
+	 * @return DateRange either a single day (if isSingleCat()) or a year
+	 */
 	private DateRange createDateRangeFromStartDate() {
 		final Calendar eCal = Calendar.getInstance();
 		eCal.setTime(getStartDate());
 		if (isSingleCat()) {
 			eCal.add(Calendar.DATE, 1);
 		} else {
-			eCal.add(Calendar.MONTH, 1);
+			eCal.add(Calendar.YEAR, 1);
 		}
 		final DateRange dtRange = GenericDatabaseUtils.getUserSession().createDateRange(getStartDate(), eCal.getTime());
 		return dtRange;
 	}
 
+	/**
+	 * Getter for customer name
+	 *
+	 * @return String customer name to restrict to
+	 */
 	public String getCustomerName() {
 		return customerName;
 	}
 
+	/**
+	 * Setter for customer name
+	 *
+	 * @param customerName
+	 *            String customer name to restrict to
+	 */
 	public void setCustomerName(String customerName) {
 		this.customerName = customerName;
 	}
 
+	/**
+	 * Getter for startDate
+	 *
+	 * @return Date from which to start wrapper
+	 */
 	public Date getStartDate() {
 		return startDate;
 	}
 
+	/**
+	 * Setter for startDate
+	 *
+	 * @param startDate
+	 *            Date from which to start wrapper
+	 */
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}

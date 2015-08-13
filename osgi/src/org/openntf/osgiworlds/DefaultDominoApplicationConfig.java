@@ -2,8 +2,6 @@ package org.openntf.osgiworlds;
 
 import javax.servlet.ServletContext;
 
-import lotus.domino.NotesException;
-
 import org.openntf.domino.Session;
 import org.openntf.domino.ext.Session.Fixes;
 import org.openntf.domino.session.INamedSessionFactory;
@@ -16,19 +14,22 @@ import com.ibm.domino.napi.c.NotesUtil;
 import com.ibm.domino.napi.c.xsp.XSPNative;
 import com.ibm.domino.osgi.core.context.ContextInfo;
 
+import lotus.domino.NotesException;
+
 /**
- * The default configuration for a OsgiWorlds Application is to use as CURRENT
- * the following defaults:
  *
- * @author Paul Withers
+ * @author Paul Withers<br/>
+ *         <br/>
+ *         The default configuration for a OsgiWorlds Application is to use as
+ *         CURRENT the following defaults:
  *
  */
-public class DefaultDominoApplicationConfig extends BaseApplicationConfigurator implements ApplicationConfiguration {
+@SuppressWarnings("restriction")
+public class DefaultDominoApplicationConfig extends BaseApplicationConfigurator {
 
-	private boolean _isDeveloperMode = false;
-	private String _defaultDevelopmentUserName = null;
-	private String _appSignerFullName = null;
-
+	/**
+	 * ThreadLocal for holding the current user's Domino Full Name
+	 */
 	private static ThreadLocal<String> dominoFullName = new ThreadLocal<String>() {
 
 		@Override
@@ -38,21 +39,45 @@ public class DefaultDominoApplicationConfig extends BaseApplicationConfigurator 
 
 	};
 
+	/**
+	 * @author Paul Withers
+	 *
+	 *         enum for Identity types available within the system - SIGNER and
+	 *         CURRENT
+	 */
 	enum IdentityLocator {
 		SIGNER, CURRENT
 	}
 
+	/**
+	 * @author Paul Withers
+	 *
+	 *         Session Factory for generating a Session for the specific user
+	 */
 	@SuppressWarnings("serial")
 	private class XSPBasedNamedSessionFactory implements ISessionFactory, INamedSessionFactory {
 
 		private boolean _isFullAccess = false;
 		private IdentityLocator _identityLocator = null;
 
+		/**
+		 * Overloaded constructor, allowing setting of variables
+		 *
+		 * @param fullAccess
+		 *            boolean whether or not the session has full access
+		 * @param locator
+		 *            IdentityLocation enum for session type (CURRENT / SIGNER)
+		 */
 		public XSPBasedNamedSessionFactory(boolean fullAccess, IdentityLocator locator) {
 			this._isFullAccess = fullAccess;
 			this._identityLocator = locator;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 *
+		 * @see org.openntf.domino.session.ISessionFactory#createSession()
+		 */
 		@Override
 		public Session createSession() {
 
@@ -69,10 +94,19 @@ public class DefaultDominoApplicationConfig extends BaseApplicationConfigurator 
 
 		}
 
+		/*
+		 * (non-Javadoc)
+		 *
+		 * @see
+		 * org.openntf.domino.session.INamedSessionFactory#createSession(java.
+		 * lang.String)
+		 */
+		@SuppressWarnings("deprecation")
 		@Override
 		public Session createSession(String username) {
 			try {
 				final long userHandle = NotesUtil.createUserNameList(username);
+				System.out.println("Running as " + username);
 				final lotus.domino.Session rawSession = XSPNative.createXPageSessionExt(username, userHandle, false, true, _isFullAccess);
 				final Session sess = Factory.fromLotus(rawSession, Session.SCHEMA, null);
 				sess.setFixEnable(Fixes.APPEND_ITEM_VALUE, true);
@@ -93,16 +127,12 @@ public class DefaultDominoApplicationConfig extends BaseApplicationConfigurator 
 		}
 	};
 
-	@Override
-	public String getAppSignerFullName() {
-		return _appSignerFullName;
-	}
-
-	@Override
-	public boolean isDeveloperMode() {
-		return _isDeveloperMode;
-	}
-
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.openntf.osgiworlds.BaseApplicationConfigurator#configure(javax.
+	 * servlet.ServletContext)
+	 */
 	@Override
 	public void configure(ServletContext context) {
 
@@ -110,24 +140,23 @@ public class DefaultDominoApplicationConfig extends BaseApplicationConfigurator 
 		this.setAppContext(context);
 
 		// Read the signer identity
-		this._appSignerFullName = context.getInitParameter(CONTEXTPARAM_CWAPPSIGNER_IDENTITY);
+		setAppSignerFullName(context.getInitParameter(CONTEXTPARAM_CWAPPSIGNER_IDENTITY));
 
 		if ("true".equals(context.getInitParameter("osgiworlds.developermode"))) {
-			this._isDeveloperMode = true;
-			Factory.println("OSGIWORLDS::" + context.getServletContextName(),
-					"OsgiWorlds development mode is enabled through application property \"xworlds.developermode=true\"");
+			setDeveloperMode(true);
+			Factory.println("OSGIWORLDS::" + context.getServletContextName(), "OsgiWorlds development mode is enabled through application property \"xworlds.developermode=true\"");
 
 			// Read the development time identity
-			this._defaultDevelopmentUserName = context.getInitParameter(CONTEXTPARAM_CWDEFAULTDEVELOPER_IDENTITY);
-			if (_defaultDevelopmentUserName == null) {
-				_defaultDevelopmentUserName = "Anonymous";
+			setDefaultDevelopmentUserName(context.getInitParameter(CONTEXTPARAM_CWDEFAULTDEVELOPER_IDENTITY));
+			if (getDefaultDevelopmentUserName() == null) {
+				setDefaultDevelopmentUserName("Anonymous");
 				try {
 					setDominoFullName(ContextInfo.getUserSession().getEffectiveUserName());
 				} catch (final NotesException e) {
 					e.printStackTrace();
 				}
 			} else {
-				setDominoFullName(_defaultDevelopmentUserName);
+				setDominoFullName(getDefaultDevelopmentUserName());
 			}
 		}
 
@@ -146,17 +175,23 @@ public class DefaultDominoApplicationConfig extends BaseApplicationConfigurator 
 
 	}
 
+	/**
+	 * Gets Notes Name for current user from ThreadLocal map
+	 *
+	 * @return String Notes Name for current user
+	 */
 	public static String getDominoFullName() {
 		return dominoFullName.get();
 	}
 
+	/**
+	 * Sets Notes Name for current user from ThreadLocal map
+	 *
+	 * @param newDominoFullName
+	 *            String Notes Name for current user
+	 */
 	public static void setDominoFullName(String newDominoFullName) {
 		dominoFullName.set(newDominoFullName);
-	}
-
-	@Override
-	public String getDefaultDevelopmentUserName() {
-		return _defaultDevelopmentUserName;
 	}
 
 }

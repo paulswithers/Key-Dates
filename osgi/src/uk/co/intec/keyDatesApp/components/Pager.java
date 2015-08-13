@@ -1,5 +1,6 @@
 package uk.co.intec.keyDatesApp.components;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,12 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.themes.ValoTheme;
 
+/**
+ * @author Paul Withers<br/>
+ *         <br/>
+ *         Component to provide a pager sizes selector (5, 10, 25, 50) and page
+ *         navigation buttons (Prev, 1-5, Next).
+ */
 public class Pager extends HorizontalLayout {
 	private static final long serialVersionUID = 1L;
 	private ViewWrapper wrappedView;
@@ -23,6 +30,11 @@ public class Pager extends HorizontalLayout {
 	private final Map<Object, Button> pagerPagesButtons = new HashMap<Object, Button>();
 	private HorizontalLayout pagerPagesPanel = new HorizontalLayout();
 
+	/**
+	 * @author Paul Withers
+	 *
+	 *         Enum for page sizes
+	 */
 	public enum Sizes {
 		FIVE(5), TEN(10), TWENTY_FIVE(25), FIFTY(50);
 
@@ -37,15 +49,37 @@ public class Pager extends HorizontalLayout {
 		}
 	}
 
+	/**
+	 * Constructor
+	 */
 	public Pager() {
 
 	}
 
+	/**
+	 * Overloaded constructor, allowing passing of the ViewWrapper this pager
+	 * maps to and page sizes to allow switching between.
+	 *
+	 * @param wrappedView
+	 *            ViewWrapper through which the pager should navigate
+	 * @param availSizes
+	 *            List<Sizes> page sizes user can select, defaulting to 5, 10,
+	 *            25 if null is passed
+	 */
 	public Pager(ViewWrapper wrappedView, List<Sizes> availSizes) {
 		setWrappedView(wrappedView);
+		if (null == availSizes) {
+			availSizes = new ArrayList<Sizes>();
+			availSizes.add(Sizes.FIVE);
+			availSizes.add(Sizes.TEN);
+			availSizes.add(Sizes.TWENTY_FIVE);
+		}
 		setAvailableSizes(availSizes);
 	}
 
+	/**
+	 * Load the pager components
+	 */
 	public void loadContent() {
 		final HorizontalLayout pagerSizePanel = loadPagerSizesButtons();
 		// loadPagerPagesButtons(); No point, data has not yet been loaded
@@ -54,6 +88,11 @@ public class Pager extends HorizontalLayout {
 		setComponentAlignment(getPagerPagesPanel(), Alignment.TOP_RIGHT);
 	}
 
+	/**
+	 * Load pager sizes buttons
+	 *
+	 * @return HorizontalLayout containing the pager sizes buttons
+	 */
 	public HorizontalLayout loadPagerSizesButtons() {
 		final HorizontalLayout panel = new HorizontalLayout();
 		for (final Sizes size : getAvailableSizes()) {
@@ -64,6 +103,13 @@ public class Pager extends HorizontalLayout {
 			pageSizeLink.addClickListener(new ClickListener() {
 				private static final long serialVersionUID = 1L;
 
+				/*
+				 * (non-Javadoc)
+				 *
+				 * @see
+				 * com.vaadin.ui.Button.ClickListener#buttonClick(com.vaadin.ui.
+				 * Button.ClickEvent)
+				 */
 				@Override
 				public void buttonClick(ClickEvent event) {
 					getWrappedView().setCount(size.getValue());
@@ -84,6 +130,10 @@ public class Pager extends HorizontalLayout {
 		return panel;
 	}
 
+	/**
+	 * Update styles (adding or removing "selected" style) depending on whether
+	 * or not each pager button is selected
+	 */
 	public void updatePagerSizeButtonStyles() {
 		for (final Sizes size : getPagerSizeButtons().keySet()) {
 			if (size.getValue() == getWrappedView().getCount()) {
@@ -94,6 +144,14 @@ public class Pager extends HorizontalLayout {
 		}
 	}
 
+	/**
+	 * Load pages buttons - Prev, page numbers, Next.<br/>
+	 * <br/>
+	 * If current page is 3 or less, the first page number displayed will be 1.
+	 * Otherwise, if available page is less than current page + 2, the first
+	 * page number will be available pages - 4. Otherwise, the first page number
+	 * will be current page - 2.
+	 */
 	public void loadPagerPagesButtons() {
 		getPagerPagesPanel().removeAllComponents();
 		if (getWrappedView().getAvailablePages() > 1) {
@@ -105,6 +163,13 @@ public class Pager extends HorizontalLayout {
 			pageLink.addClickListener(new ClickListener() {
 				private static final long serialVersionUID = 1L;
 
+				/*
+				 * (non-Javadoc)
+				 *
+				 * @see
+				 * com.vaadin.ui.Button.ClickListener#buttonClick(com.vaadin.ui.
+				 * Button.ClickEvent)
+				 */
 				@Override
 				public void buttonClick(ClickEvent event) {
 					getWrappedView().setCurrentPage(getWrappedView().getCurrentPage() - 1);
@@ -122,6 +187,9 @@ public class Pager extends HorizontalLayout {
 		if (getWrappedView().getCurrentPage() > 3) {
 			if (getWrappedView().getAvailablePages() < (getWrappedView().getCurrentPage() + 2)) {
 				startPageNo = getWrappedView().getAvailablePages() - 4;
+				if (startPageNo < 1) {
+					startPageNo = 1;
+				}
 			} else {
 				startPageNo = getWrappedView().getCurrentPage() - 2;
 			}
@@ -135,6 +203,13 @@ public class Pager extends HorizontalLayout {
 			pageLink.addClickListener(new ClickListener() {
 				private static final long serialVersionUID = 1L;
 
+				/*
+				 * (non-Javadoc)
+				 *
+				 * @see
+				 * com.vaadin.ui.Button.ClickListener#buttonClick(com.vaadin.ui.
+				 * Button.ClickEvent)
+				 */
 				@Override
 				public void buttonClick(ClickEvent event) {
 					getWrappedView().setStart(1 + ((newPageNo - 1) * getWrappedView().getCount()));
@@ -160,6 +235,13 @@ public class Pager extends HorizontalLayout {
 			pageLink.addClickListener(new ClickListener() {
 				private static final long serialVersionUID = 1L;
 
+				/*
+				 * (non-Javadoc)
+				 *
+				 * @see
+				 * com.vaadin.ui.Button.ClickListener#buttonClick(com.vaadin.ui.
+				 * Button.ClickEvent)
+				 */
 				@Override
 				public void buttonClick(ClickEvent event) {
 					getWrappedView().setCurrentPage(getWrappedView().getCurrentPage() + 1);
@@ -174,6 +256,10 @@ public class Pager extends HorizontalLayout {
 		updatePagerPagesButtonStyles();
 	}
 
+	/**
+	 * Update styles on pages buttons. Prev is disabled if on page 1. Next is
+	 * disabled if at end of view. Current page is disabled, all others enabled.
+	 */
 	public void updatePagerPagesButtonStyles() {
 		if (getWrappedView().getCurrentPage() == 1) {
 			getPagerPagesButtons().get("Prev").setEnabled(false);
@@ -197,36 +283,81 @@ public class Pager extends HorizontalLayout {
 
 	}
 
+	/**
+	 * Getter for wrappedView
+	 *
+	 * @return ViewWrapper wrapping the underlying (Domino) View
+	 */
 	public ViewWrapper getWrappedView() {
 		return wrappedView;
 	}
 
+	/**
+	 * Setter for wrappedView
+	 *
+	 * @param wrappedView
+	 *            ViewWrapper wrapping the underlying (Domino) View
+	 */
 	public void setWrappedView(ViewWrapper wrappedView) {
 		this.wrappedView = wrappedView;
 	}
 
+	/**
+	 * Getter for availableSizes
+	 *
+	 * @return List of Sizes available for selection in this pager
+	 */
 	public List<Sizes> getAvailableSizes() {
 		return availableSizes;
 	}
 
+	/**
+	 * Stter for availableSizes
+	 *
+	 * @param availableSizes
+	 *            List of Sizes available for selection in this pager
+	 */
 	public void setAvailableSizes(List<Sizes> availableSizes) {
 		this.availableSizes = availableSizes;
 	}
 
+	/**
+	 * Getter for pagerSizesButtons, to allow easy access from outside this
+	 * class
+	 *
+	 * @return Map where the key is a Sizes enum and the value is the Button
+	 */
 	public Map<Sizes, Button> getPagerSizeButtons() {
 		return pagerSizeButtons;
 	}
 
+	/**
+	 * Getter for pagerPagesButtons, to allow easy access from outside this
+	 * class
+	 *
+	 * @return Map where they key is a label and the value is the Button
+	 */
+	public Map<Object, Button> getPagerPagesButtons() {
+		return pagerPagesButtons;
+	}
+
+	/**
+	 * Getter for pagerPagesPanel
+	 *
+	 * @return HorizontalLayout containing the pagerPagesButtons
+	 */
 	public HorizontalLayout getPagerPagesPanel() {
 		return pagerPagesPanel;
 	}
 
+	/**
+	 * Setter for pagerPagesPanel
+	 *
+	 * @param pagerPagesPanel
+	 *            HorizontalLayout containing the pagerPagesButtons
+	 */
 	public void setPagerPagesPanel(HorizontalLayout pagerPagesPanel) {
 		this.pagerPagesPanel = pagerPagesPanel;
-	}
-
-	public Map<Object, Button> getPagerPagesButtons() {
-		return pagerPagesButtons;
 	}
 
 }

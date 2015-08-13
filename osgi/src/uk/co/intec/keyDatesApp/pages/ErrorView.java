@@ -7,15 +7,19 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.Reindeer;
 
 /**
- * View shown when trying to navigate to a view that does not exist using
- * {@link com.vaadin.navigator.Navigator}.
- *
+ * @author Paul Withers<br/>
+ *         <br/>
+ *         View shown when trying to navigate to a view that does not exist
+ *         using {@link com.vaadin.navigator.Navigator}.
  *
  */
 public class ErrorView extends VerticalLayout implements View {
 	private static final long serialVersionUID = 1L;
 	private Label explanation;
 
+	/**
+	 * Constructor loading error contents
+	 */
 	public ErrorView() {
 		setMargin(true);
 		setSpacing(true);
@@ -26,6 +30,13 @@ public class ErrorView extends VerticalLayout implements View {
 		addComponent(explanation = new Label());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.vaadin.navigator.View#enter(com.vaadin.navigator.ViewChangeListener.
+	 * ViewChangeEvent)
+	 */
 	@Override
 	public void enter(ViewChangeListener.ViewChangeEvent event) {
 		explanation.setValue(String.format("You tried to navigate to a view ('%s') that does not exist.", event.getViewName()));

@@ -11,10 +11,22 @@ import org.openntf.domino.xsp.ODAPlatform;
 
 import com.vaadin.server.VaadinServlet;
 
+/**
+ * @author Paul Withers<br/>
+ *         <br/>
+ *         OsgiWorlds extension of VaadinServlet class, allowing us to start and
+ *         terminate Domino threads and application configuration automatically.
+ *
+ */
 public class ODA_VaadinServlet extends VaadinServlet {
 	private static final long serialVersionUID = 1L;
 	private boolean stopODAPlatform = false;
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see javax.servlet.GenericServlet#init()
+	 */
 	@Override
 	public void init() throws ServletException {
 		if (!ODAPlatform.isStarted()) {
@@ -24,6 +36,11 @@ public class ODA_VaadinServlet extends VaadinServlet {
 		super.init();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.vaadin.server.VaadinServlet#destroy()
+	 */
 	@Override
 	public void destroy() {
 		super.destroy();
@@ -32,6 +49,12 @@ public class ODA_VaadinServlet extends VaadinServlet {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see com.vaadin.server.VaadinServlet#service(javax.servlet.http.
+	 * HttpServletRequest, javax.servlet.http.HttpServletResponse)
+	 */
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		startDominoThread();
@@ -39,6 +62,9 @@ public class ODA_VaadinServlet extends VaadinServlet {
 		stopDominoThread();
 	}
 
+	/**
+	 * Initialises the Domino Thread based on application config
+	 */
 	public void startDominoThread() {
 		try {
 			Factory.initThread(Factory.STRICT_THREAD_CONFIG);
@@ -49,6 +75,9 @@ public class ODA_VaadinServlet extends VaadinServlet {
 		}
 	}
 
+	/**
+	 * Terminates the Domino Thread
+	 */
 	public void stopDominoThread() {
 		try {
 			Factory.termThread();
