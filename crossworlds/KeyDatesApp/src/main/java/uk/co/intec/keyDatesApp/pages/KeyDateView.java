@@ -3,7 +3,7 @@ package uk.co.intec.keyDatesApp.pages;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
@@ -113,12 +113,8 @@ public class KeyDateView extends CssLayout implements View {
 		final TextField t1 = (TextField) getBeanFields().buildAndBind("Title: ", "title");
 		t1.setNullRepresentation("");
 		t1.setSizeFull();
-		t1.setRequired(true);
-		t1.setRequiredError("Please enter title");
 
 		final DateField d1 = getBeanFields().buildAndBind("Date: ", "date", DateField.class);
-		d1.setRequired(true);
-		d1.setRequiredError("Please enter date");
 		d1.setRangeStart(getStartDate());
 		d1.setRangeEnd(getEndDate());
 
@@ -175,7 +171,7 @@ public class KeyDateView extends CssLayout implements View {
 
 			/*
 			 * (non-Javadoc)
-			 *
+			 * 
 			 * @see
 			 * com.vaadin.ui.Button.ClickListener#buttonClick(com.vaadin.ui.
 			 * Button.ClickEvent)
@@ -200,7 +196,7 @@ public class KeyDateView extends CssLayout implements View {
 
 			/*
 			 * (non-Javadoc)
-			 *
+			 * 
 			 * @see
 			 * com.vaadin.ui.Button.ClickListener#buttonClick(com.vaadin.ui.
 			 * Button.ClickEvent)
@@ -223,7 +219,7 @@ public class KeyDateView extends CssLayout implements View {
 
 			/*
 			 * (non-Javadoc)
-			 *
+			 * 
 			 * @see
 			 * com.vaadin.ui.Button.ClickListener#buttonClick(com.vaadin.ui.
 			 * Button.ClickEvent)
