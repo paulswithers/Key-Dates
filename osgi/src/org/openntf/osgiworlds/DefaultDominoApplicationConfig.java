@@ -1,6 +1,7 @@
 package org.openntf.osgiworlds;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 
 import org.openntf.domino.Session;
 import org.openntf.domino.ext.Session.Fixes;
@@ -134,7 +135,7 @@ public class DefaultDominoApplicationConfig extends BaseApplicationConfigurator 
 	 * servlet.ServletContext)
 	 */
 	@Override
-	public void configure(ServletContext context) {
+	public void configure(ServletContext context, HttpServletRequest request) {
 
 		// Save the current application context
 		this.setAppContext(context);
@@ -142,21 +143,36 @@ public class DefaultDominoApplicationConfig extends BaseApplicationConfigurator 
 		// Read the signer identity
 		setAppSignerFullName(context.getInitParameter(CONTEXTPARAM_CWAPPSIGNER_IDENTITY));
 
-		if ("true".equals(context.getInitParameter("osgiworlds.developermode"))) {
-			setDeveloperMode(true);
-			Factory.println("OSGIWORLDS::" + context.getServletContextName(), "OsgiWorlds development mode is enabled through application property \"xworlds.developermode=true\"");
+		// Get the current user's Domino Full Name
+		// First try session attribute "org.openntf.osgiworlds.request.username"
+		if (request.getSession(false) != null && request.getSession(false).getAttribute(CONTEXTPARAM_SESSION_IDENTITY) != null) {
+			setDominoFullName((String) request.getSession(false).getAttribute(CONTEXTPARAM_SESSION_IDENTITY));
+		} else {
+			if ("true".equals(context.getInitParameter("osgiworlds.developermode"))) {
+				setDeveloperMode(true);
+				Factory.println("OSGIWORLDS::" + context.getServletContextName(),
+						"OsgiWorlds development mode is enabled through application property \"xworlds.developermode=true\"");
 
-			// Read the development time identity
-			setDefaultDevelopmentUserName(context.getInitParameter(CONTEXTPARAM_CWDEFAULTDEVELOPER_IDENTITY));
-			if (getDefaultDevelopmentUserName() == null) {
-				setDefaultDevelopmentUserName("Anonymous");
+				// Read the development time identity
+				setDefaultDevelopmentUserName(context.getInitParameter(CONTEXTPARAM_CWDEFAULTDEVELOPER_IDENTITY));
+				if (null != getDefaultDevelopmentUserName()) {
+					setDominoFullName(getDefaultDevelopmentUserName());
+				} else {
+					setDefaultDevelopmentUserName("Anonymous");
+					try {
+						setDominoFullName(ContextInfo.getUserSession().getEffectiveUserName());
+					} catch (final NotesException e) {
+						e.printStackTrace();
+					}
+				}
+				request.getSession().setAttribute(CONTEXTPARAM_SESSION_IDENTITY, getDominoFullName());
+			} else {
 				try {
 					setDominoFullName(ContextInfo.getUserSession().getEffectiveUserName());
 				} catch (final NotesException e) {
 					e.printStackTrace();
 				}
-			} else {
-				setDominoFullName(getDefaultDevelopmentUserName());
+				request.getSession().setAttribute(CONTEXTPARAM_SESSION_IDENTITY, getDominoFullName());
 			}
 		}
 

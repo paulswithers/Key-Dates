@@ -7,6 +7,7 @@ Bundle-Activator: uk.co.intec.keyDatesApp.Activator
 Bundle-Vendor: PAULWITHERS
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: com.ibm.domino.osgi.core.context,
+ com.vaadin.ui.components.calendar,
  javax.servlet;version="2.5.0",
  javax.servlet.http;version="2.5.0",
  lotus.domino,
@@ -455,4 +456,7 @@ Bundle-ClassPath: WebContent/WEB-INF/lib/atmosphere-runtime-2.2.7.vaadin1.jar,
  WebContent/WEB-INF/lib/vaadin-shared-7.5.0.rc1.jar,
  WebContent/WEB-INF/lib/vaadin-slf4j-jdk14-1.6.1.jar,
  WebContent/WEB-INF/lib/vaadin-themes-7.5.0.rc1.jar,
- .
+ .,
+ WebContent/WEB-INF/lib/commons-beanutils-1.8.3.jar,
+ WebContent/WEB-INF/lib/commons-collections-3.2.1.jar,
+ WebContent/WEB-INF/lib/org.apache.commons.lang_2.2.0.20130228-1411.jar

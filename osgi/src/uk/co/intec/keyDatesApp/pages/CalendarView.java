@@ -12,6 +12,7 @@ import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.VerticalLayout;
 
 import uk.co.intec.keyDatesApp.components.DateSelector;
+import uk.co.intec.keyDatesApp.model.KeyDateCalendarEventClickHandler;
 import uk.co.intec.keyDatesApp.model.KeyDateCalendarView_CalendarEventProvider;
 
 /**
@@ -51,7 +52,7 @@ public class CalendarView extends CssLayout implements View {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.vaadin.navigator.View#enter(com.vaadin.navigator.ViewChangeListener.
 	 * ViewChangeEvent)
@@ -75,6 +76,8 @@ public class CalendarView extends CssLayout implements View {
 		try {
 			final VerticalLayout body = new VerticalLayout();
 			getCalLayout().setSizeFull();
+
+			getCalLayout().setHandler(new KeyDateCalendarEventClickHandler(KeyDateView.VIEW_NAME));
 
 			final Date today = new Date();
 			final GregorianCalendar cal = new GregorianCalendar(getLocale());

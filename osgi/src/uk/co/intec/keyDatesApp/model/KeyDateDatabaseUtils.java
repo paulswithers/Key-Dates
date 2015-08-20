@@ -1,5 +1,6 @@
 package uk.co.intec.keyDatesApp.model;
 
+import org.apache.commons.lang.StringUtils;
 import org.openntf.domino.Database;
 import org.openntf.domino.View;
 import org.openntf.domino.ViewEntry;
@@ -9,6 +10,7 @@ import org.openntf.osgiworlds.model.GenericDatabaseUtils;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.util.AbstractContainer;
+import com.vaadin.data.util.IndexedContainer;
 
 /**
  * @author Paul Withers<br/>
@@ -16,6 +18,8 @@ import com.vaadin.data.util.AbstractContainer;
  *         Class for application-specific Domino-specific utilities.
  */
 public class KeyDateDatabaseUtils {
+	private static final String CUST_CONTAINER_PROPERTY = "CUSTOMER_NAME";
+	private static final String CONTACT_CONTAINER_PROPERTY = "CONTACT_NAME";
 
 	/**
 	 * Gets the customers Key Dates have been set up for into a Vaadin Container
@@ -41,6 +45,63 @@ public class KeyDateDatabaseUtils {
 			}
 			ent = nav.getNextSibling();
 		}
+	}
+
+	/**
+	 * Gets an IndexedContainer of customers for whom Key Dates have been
+	 * created
+	 *
+	 * @return IndexedContainer of customers
+	 */
+	public static IndexedContainer getCustContainer() {
+		final IndexedContainer custContainer = new IndexedContainer();
+		custContainer.addContainerProperty(CUST_CONTAINER_PROPERTY, String.class, "");
+		KeyDateDatabaseUtils.loadCustomersToContainer(custContainer, CUST_CONTAINER_PROPERTY);
+		return custContainer;
+	}
+
+	/**
+	 * Gets a unique list of contacts Key Dates have been created for, based on
+	 * the selected customer
+	 *
+	 * @param container
+	 *            AbstractContainer or extension into which to load the
+	 *            customers
+	 * @param property
+	 *            String ItemProperty of the container into which to load the
+	 *            customer name
+	 * @param customer
+	 *            String customer to filter on
+	 */
+	public static void loadContactsToContainer(AbstractContainer container, String property, String customer) {
+		final Database currDb = GenericDatabaseUtils.getDataDb();
+		final View lkupView = currDb.getView("(luCustomers)");
+		final ViewNavigator nav = lkupView.createViewNavFromCategory(customer);
+		ViewEntry ent = nav.getFirst();
+		while (null != ent) {
+			if (StringUtils.isNotEmpty((String) ent.getColumnValue("contact"))) {
+				final Item item = container.addItem(ent.getColumnValue("contact"));
+				if (item != null) {
+					item.getItemProperty(property).setValue(ent.getColumnValue("contact"));
+				}
+			}
+			ent = nav.getNextSibling();
+		}
+	}
+
+	/**
+	 * Gets an IndexedContainer of contacts for whom Key Dates have been
+	 * created, based on the passed customer
+	 *
+	 * @param customer
+	 *            String customer already selected
+	 * @return IndexedContainer of customers
+	 */
+	public static IndexedContainer getContactContainer(String customer) {
+		final IndexedContainer contactContainer = new IndexedContainer();
+		contactContainer.addContainerProperty(CONTACT_CONTAINER_PROPERTY, String.class, "");
+		KeyDateDatabaseUtils.loadContactsToContainer(contactContainer, CONTACT_CONTAINER_PROPERTY, customer);
+		return contactContainer;
 	}
 
 	/**

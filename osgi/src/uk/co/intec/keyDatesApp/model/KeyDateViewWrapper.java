@@ -333,6 +333,7 @@ public class KeyDateViewWrapper extends AbstractViewWrapper {
 		entWrapper.setDescription(ent.getColumnValue("description", String.class));
 		entWrapper.setCustomer(ent.getColumnValue("customer", String.class));
 		entWrapper.setContact(ent.getColumnValue("contact", String.class));
+		entWrapper.setNoteId(ent.getNoteID());
 		List<ViewEntryWrapper> dateEntries = new ArrayList<ViewEntryWrapper>();
 		final java.sql.Date mapDate = new java.sql.Date(entWrapper.getEventDate().getTime());
 		if (retVal_.containsKey(mapDate)) {
@@ -347,7 +348,7 @@ public class KeyDateViewWrapper extends AbstractViewWrapper {
 	 * day or a month. The DateRange is then used to restrict the wrapper's
 	 * contents.
 	 *
-	 * @return DateRange either a single day (if isSingleCat()) or a year
+	 * @return DateRange either a single day (if isSingleCat()) or five years
 	 */
 	private DateRange createDateRangeFromStartDate() {
 		final Calendar eCal = Calendar.getInstance();
@@ -355,7 +356,7 @@ public class KeyDateViewWrapper extends AbstractViewWrapper {
 		if (isSingleCat()) {
 			eCal.add(Calendar.DATE, 1);
 		} else {
-			eCal.add(Calendar.YEAR, 1);
+			eCal.add(Calendar.YEAR, 5);
 		}
 		final DateRange dtRange = GenericDatabaseUtils.getUserSession().createDateRange(getStartDate(), eCal.getTime());
 		return dtRange;

@@ -11,9 +11,9 @@ import org.openntf.domino.View;
 import org.openntf.domino.ViewEntry;
 import org.openntf.domino.ViewEntryCollection;
 import org.openntf.osgiworlds.model.AbstractCalendarEventProvider;
+import org.openntf.osgiworlds.model.BasicDominoEvent;
 import org.openntf.osgiworlds.model.GenericDatabaseUtils;
 
-import com.vaadin.ui.components.calendar.event.BasicEvent;
 import com.vaadin.ui.components.calendar.event.CalendarEvent;
 
 /**
@@ -50,13 +50,14 @@ public class KeyDateCalendarView_CalendarEventProvider extends AbstractCalendarE
 			final DateRange dtRange = GenericDatabaseUtils.getUserSession().createDateRange(sDate, eDate);
 			final ViewEntryCollection vec = calView.getAllEntriesByKey(dtRange, true);
 			for (final ViewEntry ent : vec) {
-				final BasicEvent calEnt = new BasicEvent();
+				final BasicDominoEvent calEnt = new BasicDominoEvent();
 				final Vector colVals = ent.getColumnValues();
 				calEnt.setStart((Date) colVals.get(0));
 				calEnt.setEnd((Date) colVals.get(0));
 				calEnt.setAllDay(true);
 				calEnt.setCaption((String) colVals.get(1));
 				calEnt.setDescription((String) colVals.get(1));
+				calEnt.setNoteId(ent.getNoteID());
 				events.add(calEnt);
 			}
 		} catch (final Throwable t) {

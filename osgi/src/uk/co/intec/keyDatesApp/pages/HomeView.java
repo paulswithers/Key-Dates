@@ -23,7 +23,7 @@ public class HomeView extends CssLayout implements View {
 	private static final long serialVersionUID = 1L;
 	public static final String VIEW_NAME = ""; // Default view name is ""
 	public static final String VIEW_LABEL = "Home";
-	public boolean loaded = false;
+	private boolean loaded = false;
 
 	/**
 	 * Constructor, sets CssLayout to take full area
@@ -46,7 +46,7 @@ public class HomeView extends CssLayout implements View {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * com.vaadin.navigator.View#enter(com.vaadin.navigator.ViewChangeListener.
 	 * ViewChangeEvent)

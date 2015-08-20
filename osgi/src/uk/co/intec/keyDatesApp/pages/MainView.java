@@ -4,14 +4,14 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.openntf.osgiworlds.model.ViewEntryWrapper;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
@@ -21,9 +21,9 @@ import com.vaadin.ui.themes.ValoTheme;
 
 import uk.co.intec.keyDatesApp.components.MainViewFilter;
 import uk.co.intec.keyDatesApp.components.Pager;
+import uk.co.intec.keyDatesApp.model.DocLinkListener;
 import uk.co.intec.keyDatesApp.model.KeyDateEntryWrapper;
 import uk.co.intec.keyDatesApp.model.KeyDateViewWrapper;
-import uk.co.intec.keyDatesApp.model.StringUtilWrapper;
 
 /**
  * @author Paul Withers<br/>
@@ -40,7 +40,7 @@ public class MainView extends CssLayout implements View {
 	private final VerticalLayout body = new VerticalLayout();
 	private KeyDateViewWrapper viewWrapper = new KeyDateViewWrapper(this);
 	private MainViewFilter filter = new MainViewFilter(this);
-	public boolean loaded = false;
+	private boolean loaded = false;
 	private Pager pager;
 
 	/**
@@ -146,35 +146,28 @@ public class MainView extends CssLayout implements View {
 						final KeyDateEntryWrapper entry = (KeyDateEntryWrapper) veWrapped;
 						final StringBuilder suffixTitle = new StringBuilder("");
 						if (getViewWrapper().getViewName().equals(KeyDateViewWrapper.ViewType.BY_DATE)) {
-							if (StringUtilWrapper.isNotEmpty(entry.getCustomer())) {
+							if (StringUtils.isNotEmpty(entry.getCustomer())) {
 								suffixTitle.append(" (" + entry.getCustomer());
-								if (StringUtilWrapper.isNotEmpty(entry.getContact())) {
+								if (StringUtils.isNotEmpty(entry.getContact())) {
 									suffixTitle.append(" - " + entry.getContact());
 								}
 								suffixTitle.append(")");
 							}
 						} else {
-							if (StringUtilWrapper.isNotEmpty(entry.getContact())) {
+							if (StringUtils.isNotEmpty(entry.getContact())) {
 								suffixTitle.append(" - " + entry.getContact());
 							}
 						}
 						final Button title = new Button(entry.getTitle() + suffixTitle.toString());
 						title.addStyleName(ValoTheme.BUTTON_LINK);
 						// Add click event
-						title.addClickListener(new ClickListener() {
-							private static final long serialVersionUID = 1L;
-
-							@Override
-							public void buttonClick(ClickEvent event) {
-								// TODO Auto-generated method stub
-
-							}
-						});
+						title.addClickListener(new DocLinkListener(KeyDateView.VIEW_NAME, entry.getNoteId()));
 						entryRow.addComponent(title);
 
 						// Add summary, if appropriate
-						if (StringUtilWrapper.isNotEmpty(entry.getDescription())) {
+						if (StringUtils.isNotEmpty(entry.getDescription())) {
 							final Label summary = new Label(entry.getDescription());
+							summary.setContentMode(ContentMode.HTML);
 							summary.addStyleName(ValoTheme.LABEL_SMALL);
 							summary.addStyleName("view-desc");
 							entryRow.addComponent(summary);

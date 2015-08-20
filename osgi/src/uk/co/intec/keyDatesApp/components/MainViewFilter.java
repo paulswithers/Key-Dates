@@ -5,7 +5,6 @@ import java.util.Locale;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Alignment;
@@ -30,12 +29,10 @@ import uk.co.intec.keyDatesApp.pages.MainView;
  */
 public class MainViewFilter extends HorizontalLayout {
 	private static final long serialVersionUID = 1L;
-	private static final String CUST_CONTAINER_PROPERTY = "CUSTOMER_NAME";
 	private MainView parentView;
 	private ComboBox custField;
 	private PopupDateField dateField;
 	private CheckBox singleCatButton;
-	private IndexedContainer custContainer;
 	private Table custTable;
 
 	/**
@@ -87,7 +84,7 @@ public class MainViewFilter extends HorizontalLayout {
 	public void loadContent() {
 		final FormLayout cust = new FormLayout();
 		cust.setMargin(false);
-		setCustField(new ComboBox("Customer:", getCustContainer()));
+		setCustField(new ComboBox("Customer:", KeyDateDatabaseUtils.getCustContainer()));
 		getCustField().setInputPrompt("No Customer Selected");
 		getCustField().setFilteringMode(FilteringMode.STARTSWITH);
 		getCustField().setImmediate(true);
@@ -205,27 +202,6 @@ public class MainViewFilter extends HorizontalLayout {
 	}
 
 	/**
-	 * Getter for custContainer
-	 *
-	 * @return IndexedContainer of customers available for selection
-	 */
-	public IndexedContainer getCustContainer() {
-		if (null == custContainer) {
-			setCustContainer();
-		}
-		return custContainer;
-	}
-
-	/**
-	 * Loads the customers Key Dates have been created for into custContainer.
-	 */
-	public void setCustContainer() {
-		custContainer = new IndexedContainer();
-		custContainer.addContainerProperty(CUST_CONTAINER_PROPERTY, String.class, "");
-		KeyDateDatabaseUtils.loadCustomersToContainer(custContainer, CUST_CONTAINER_PROPERTY);
-	}
-
-	/**
 	 * Getter for custTable
 	 *
 	 * @return Table bound to the custContainer IndexedContainer
@@ -273,7 +249,7 @@ public class MainViewFilter extends HorizontalLayout {
 	}
 
 	/**
-	 * Settter for singleCatButton
+	 * Setter for singleCatButton
 	 *
 	 * @param singleCatButton
 	 *            Checkbox allowing restriction to a single date

@@ -1,6 +1,7 @@
 package org.openntf.osgiworlds;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Paul Withers<br/>
@@ -22,6 +23,12 @@ public interface ApplicationConfiguration {
 	 * system
 	 */
 	public static final String CONTEXTPARAM_CWDEFAULTDEVELOPER_IDENTITY = "org.openntf.osgiworlds.devtimename";
+
+	/**
+	 * The session variable in which to store the identity to be used for the
+	 * current session user
+	 */
+	public static final String CONTEXTPARAM_SESSION_IDENTITY = "org.openntf.osgiworlds.request.username";
 
 	/**
 	 * Gets the Full name for the user that will be treated as the signer for
@@ -86,9 +93,11 @@ public interface ApplicationConfiguration {
 	public void setDefaultDevelopmentUserName(String developmentUserName);
 
 	/**
-	 * @param ServletContext
-	 *            Vaadin servlet context of the application
+	 * @param context
+	 *            ServletContext Vaadin servlet context of the application
+	 * @param request
+	 *            HttpServletRequest current request to the server
 	 */
-	public void configure(ServletContext context);
+	public void configure(ServletContext context, HttpServletRequest request);
 
 }

@@ -17,5 +17,8 @@
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/vaadin-shared-7.5.0.rc1.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/vaadin-slf4j-jdk14-1.6.1.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/vaadin-themes-7.5.0.rc1.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/commons-beanutils-1.8.3.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/commons-collections-3.2.1.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/org.apache.commons.lang_2.2.0.20130228-1411.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

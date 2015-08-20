@@ -1,6 +1,7 @@
 package org.openntf.osgiworlds.model;
 
 import org.openntf.domino.Database;
+import org.openntf.domino.Document;
 import org.openntf.domino.Session;
 import org.openntf.domino.utils.DominoUtils;
 import org.openntf.domino.utils.Factory;
@@ -69,5 +70,26 @@ public class GenericDatabaseUtils {
 		} else {
 			return true;
 		}
+	}
+
+	/**
+	 * Get a specific document by passing either Note ID or UNID, returning null
+	 * if nothing found (unlike core API functionality, which throws an error")
+	 *
+	 * @param unid
+	 *            String Note ID or UNID
+	 * @return Document or null
+	 */
+	public static Document getDocumentByNoteID_Or_UNID(final String unid) {
+		Document doc;
+		doc = getDataDb().getDocumentByUNID(unid);
+		if (doc == null) {
+			try {
+				doc = getDataDb().getDocumentByID(unid);
+			} catch (final Throwable te) {
+				// Just couldn't get doc
+			}
+		}
+		return doc;
 	}
 }

@@ -1,6 +1,7 @@
 package org.openntf.osgiworlds;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Paul Withers<br/>
@@ -110,7 +111,7 @@ public abstract class BaseApplicationConfigurator implements ApplicationConfigur
 	 * ServletContext)
 	 */
 	@Override
-	public void configure(ServletContext context) {
+	public void configure(ServletContext context, HttpServletRequest request) {
 		throw new IllegalStateException(ERROR_DONT_USE_DIRECTLY);
 
 	}

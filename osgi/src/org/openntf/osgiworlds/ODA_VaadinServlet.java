@@ -57,19 +57,22 @@ public class ODA_VaadinServlet extends VaadinServlet {
 	 */
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		startDominoThread();
+		startDominoThread(request);
 		super.service(request, response);
 		stopDominoThread();
 	}
 
 	/**
 	 * Initialises the Domino Thread based on application config
+	 *
+	 * @param request
+	 *            HttpServletRequest current request
 	 */
-	public void startDominoThread() {
+	public void startDominoThread(HttpServletRequest request) {
 		try {
 			Factory.initThread(Factory.STRICT_THREAD_CONFIG);
 			final DefaultDominoApplicationConfig config = new DefaultDominoApplicationConfig();
-			config.configure(getServletContext());
+			config.configure(getServletContext(), request);
 		} catch (final Exception e) {
 			stopDominoThread();
 		}
