@@ -1,5 +1,23 @@
 package uk.co.intec.keyDatesApp.components;
 
+/*
+
+<!--
+Copyright 2015 Paul Withers
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and limitations under the License
+-->
+
+*/
+
 import java.util.Date;
 import java.util.Locale;
 
@@ -106,8 +124,8 @@ public class MainViewFilter extends HorizontalLayout {
 			@Override
 			public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
 				final KeyDateViewWrapper viewWrapper = getParentView().getViewWrapper();
-				getParentView().loadRowData(
-						viewWrapper.getEntriesAsMap((String) event.getProperty().getValue(), viewWrapper.getStartDate(), viewWrapper.isSingleCat(), viewWrapper.getCount()));
+				getParentView().loadRowData(viewWrapper.getEntriesAsMap((String) event.getProperty().getValue(), viewWrapper.getStartDate(),
+						viewWrapper.isSingleCat(), viewWrapper.getCount()));
 				getParentView().getPager().loadPagerPagesButtons();
 			}
 		});
@@ -138,8 +156,8 @@ public class MainViewFilter extends HorizontalLayout {
 			@Override
 			public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
 				final KeyDateViewWrapper viewWrapper = getParentView().getViewWrapper();
-				getParentView().loadRowData(
-						viewWrapper.getEntriesAsMap(viewWrapper.getCustomerName(), (Date) event.getProperty().getValue(), viewWrapper.isSingleCat(), viewWrapper.getCount()));
+				getParentView().loadRowData(viewWrapper.getEntriesAsMap(viewWrapper.getCustomerName(), (Date) event.getProperty().getValue(),
+						viewWrapper.isSingleCat(), viewWrapper.getCount()));
 				getParentView().getPager().loadPagerPagesButtons();
 			}
 		});
@@ -168,7 +186,8 @@ public class MainViewFilter extends HorizontalLayout {
 			public void valueChange(ValueChangeEvent event) {
 				final KeyDateViewWrapper viewWrapper = getParentView().getViewWrapper();
 				final Boolean val = (Boolean) event.getProperty().getValue();
-				getParentView().loadRowData(viewWrapper.getEntriesAsMap(viewWrapper.getCustomerName(), viewWrapper.getStartDate(), val.booleanValue(), viewWrapper.getCount()));
+				getParentView().loadRowData(viewWrapper.getEntriesAsMap(viewWrapper.getCustomerName(), viewWrapper.getStartDate(), val.booleanValue(),
+						viewWrapper.getCount()));
 				getParentView().getPager().loadPagerPagesButtons();
 			}
 		});
