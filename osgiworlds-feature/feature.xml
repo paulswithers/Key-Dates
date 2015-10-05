@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="uk.co.intec.keyDatesApp.feature"
-      label="Feature"
+      label="Key Dates OSGi App Feature"
       version="1.0.0.qualifier"
       provider-name="PAUL WITHERS">
 

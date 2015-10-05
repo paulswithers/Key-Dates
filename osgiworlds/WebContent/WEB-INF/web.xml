@@ -24,7 +24,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
     </context-param>
 	<context-param>
 		<param-name>org.openntf.osgiworlds.devtimename</param-name>
-		<param-value>CN=Micky Mouse/O=Intec-PW</param-value>
+		<param-value>CN=Micky Mouse/O=Disney</param-value>
 	</context-param>
     <context-param>
     	<description>Location of the database containing the documents / views / forms</description>
@@ -36,9 +36,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
     	<param-name>heartbeatInterval</param-name>
     	<param-value>300</param-value>
     </context-param>
-	<session-config>
-    	<session-timeout>30</session-timeout>
-	</session-config>
 	<listener>
 		<display-name>org.atmosphere.cpr.SessionSupport</display-name>
 		<listener-class>

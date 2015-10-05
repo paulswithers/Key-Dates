@@ -31,7 +31,7 @@
     </context-param>
 	<context-param>
 		<param-name>org.openntf.crossworlds.devtimename</param-name>
-		<param-value>CN=Kermit Frog/O=Intec-PW</param-value>
+		<param-value>CN=Mickey Mouse/O=Disney</param-value>
 	</context-param>
     
      <context-param>

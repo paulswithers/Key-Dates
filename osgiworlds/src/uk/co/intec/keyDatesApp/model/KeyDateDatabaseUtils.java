@@ -57,9 +57,11 @@ public class KeyDateDatabaseUtils {
 		final ViewNavigator nav = lkupView.createViewNavMaxLevel(0);
 		ViewEntry ent = nav.getFirst();
 		while (null != ent) {
-			final Item item = container.addItem(ent.getColumnValue("customer"));
-			if (item != null) {
-				item.getItemProperty(property).setValue(ent.getColumnValue("customer"));
+			if (StringUtils.isNotEmpty((String) ent.getColumnValue("customer"))) {
+				final Item item = container.addItem(ent.getColumnValue("customer"));
+				if (item != null) {
+					item.getItemProperty(property).setValue(ent.getColumnValue("customer"));
+				}
 			}
 			ent = nav.getNextSibling();
 		}

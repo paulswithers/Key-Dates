@@ -40,15 +40,12 @@ public class KeyDateDatabaseUtils {
 	private static final String CONTACT_CONTAINER_PROPERTY = "CONTACT_NAME";
 
 	/**
-	 * Gets the customers Key Dates have been set up for into a Vaadin Container
-	 * class.
+	 * Gets the customers Key Dates have been set up for into a Vaadin Container class.
 	 *
 	 * @param container
-	 *            AbstractContainer or extension into which to load the
-	 *            customers
+	 *            AbstractContainer or extension into which to load the customers
 	 * @param property
-	 *            String ItemProperty of the container into which to load the
-	 *            customer name
+	 *            String ItemProperty of the container into which to load the customer name
 	 */
 	@SuppressWarnings("unchecked")
 	public static void loadCustomersToContainer(AbstractContainer container, String property) {
@@ -57,17 +54,18 @@ public class KeyDateDatabaseUtils {
 		final ViewNavigator nav = lkupView.createViewNavMaxLevel(0);
 		ViewEntry ent = nav.getFirst();
 		while (null != ent) {
-			final Item item = container.addItem(ent.getColumnValue("customer"));
-			if (item != null) {
-				item.getItemProperty(property).setValue(ent.getColumnValue("customer"));
+			if (StringUtils.isNotEmpty((String) ent.getColumnValue("customer"))) {
+				final Item item = container.addItem(ent.getColumnValue("customer"));
+				if (item != null) {
+					item.getItemProperty(property).setValue(ent.getColumnValue("customer"));
+				}
 			}
 			ent = nav.getNextSibling();
 		}
 	}
 
 	/**
-	 * Gets an IndexedContainer of customers for whom Key Dates have been
-	 * created
+	 * Gets an IndexedContainer of customers for whom Key Dates have been created
 	 *
 	 * @return IndexedContainer of customers
 	 */
@@ -79,15 +77,12 @@ public class KeyDateDatabaseUtils {
 	}
 
 	/**
-	 * Gets a unique list of contacts Key Dates have been created for, based on
-	 * the selected customer
+	 * Gets a unique list of contacts Key Dates have been created for, based on the selected customer
 	 *
 	 * @param container
-	 *            AbstractContainer or extension into which to load the
-	 *            customers
+	 *            AbstractContainer or extension into which to load the customers
 	 * @param property
-	 *            String ItemProperty of the container into which to load the
-	 *            customer name
+	 *            String ItemProperty of the container into which to load the customer name
 	 * @param customer
 	 *            String customer to filter on
 	 */
@@ -108,8 +103,7 @@ public class KeyDateDatabaseUtils {
 	}
 
 	/**
-	 * Gets an IndexedContainer of contacts for whom Key Dates have been
-	 * created, based on the passed customer
+	 * Gets an IndexedContainer of contacts for whom Key Dates have been created, based on the passed customer
 	 *
 	 * @param customer
 	 *            String customer already selected
