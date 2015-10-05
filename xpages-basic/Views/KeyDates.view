@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<view xmlns="http://www.lotus.com/dxl" name="KeyDates" maintenanceversion="1.3" showinmenu="false" noreplace="true" publicaccess="false" unreadmarks="none" onopengoto="lastopened" onrefresh="refresh" headers="beveled" opencollapsed="false" showresponsehierarchy="true" showmargin="true" shrinkrows="false" extendlastcolumn="false" showhierarchies="false" unreadcolor="black" rowlinecount="1" headerlinecount="1" rowspacing="1" bgcolor="white" totalscolor="black" headerbgcolor="white" boldunreadrows="false" evaluateactions="false" allownewdocuments="false" allowcustomizations="false" hidemarginborder="false" marginwidth="0px" marginbgcolor="white" uniquekeys="false">
+  <code event="selection">
+    <formula>SELECT Form="KeyDate"</formula>
+  </code>
+  <column sort="descending" hidedetailrows="false" itemname="date" width="8.5000" resizable="true" separatemultiplevalues="true" sortnoaccent="true" sortnocase="true" showaslinks="false" categorized="true">
+    <columnheader title="Date">
+      <font size="9pt" style="bold"/>
+    </columnheader>
+    <datetimeformat show="date" date="yearmonthday" fourdigityearfor21stcentury="true" time="hourminutesecond" zone="never" dateformat="weekdaydaymonthyear" dayformat="twodigitday" monthformat="twodigitmonth" yearformat="fourdigityear" weekdayformat="shortname" dateseparator1=" " dateseparator2="/" dateseparator3="/" timeseparator=":" timeformat24="true" preference="usersetting"/>
+    <numberformat format="general" punctuated="false" parens="false" percent="false" bytes="false"/>
+  </column>
+  <column sort="ascending" hidedetailrows="false" itemname="title" width="17" resizable="true" separatemultiplevalues="false" sortnoaccent="false" sortnocase="true" showaslinks="false" deferindexcreation="true">
+    <columnheader title="Title">
+      <font size="9pt" style="bold"/>
+    </columnheader>
+  </column>
+  <column hidedetailrows="false" itemname="description" width="22.2500" resizable="true" separatemultiplevalues="false" sortnoaccent="false" sortnocase="true" showaslinks="false" extwindowwidth="true">
+    <columnheader title="Description">
+      <font size="9pt" style="bold"/>
+    </columnheader>
+  </column>
+  <column hidedetailrows="false" itemname="customer" width="16.2500" resizable="true" separatemultiplevalues="false" sortnoaccent="false" sortnocase="true" showaslinks="false">
+    <columnheader title="Customer">
+      <font size="9pt" style="bold"/>
+    </columnheader>
+  </column>
+  <column hidedetailrows="false" itemname="contact" width="16.2500" resizable="true" separatemultiplevalues="false" sortnoaccent="false" sortnocase="true" showaslinks="false">
+    <columnheader title="Contact">
+      <font size="9pt" style="bold"/>
+    </columnheader>
+  </column>
+  <column hidedetailrows="false" listseparator="comma" itemname="staffInvolved" width="16.2500" resizable="true" separatemultiplevalues="false" sortnoaccent="false" sortnocase="true" showaslinks="false">
+    <columnheader title="Staff">
+      <font size="9pt" style="bold"/>
+    </columnheader>
+  </column>
+</view>

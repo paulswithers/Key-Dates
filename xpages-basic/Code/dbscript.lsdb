@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<databasescript xmlns="http://www.lotus.com/dxl" maintenanceversion="1.3">
+  <code event="options">
+    <lotusscript>%REM
+	Database Script Database Script
+	Created Jul 7, 2015 by admin/Intec-PW
+	Description: Comments for Database Script
+%END REM
+Option Declare
+
+
+</lotusscript>
+  </code>
+  <code event="initialize">
+    <lotusscript>Sub Initialize
+	' A comment
+End Sub</lotusscript>
+  </code>
+</databasescript>

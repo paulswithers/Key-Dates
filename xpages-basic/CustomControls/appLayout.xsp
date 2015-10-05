@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xe="http://www.ibm.com/xsp/coreex">
+
+	<!--
+		Copyright 2015 Paul Withers Licensed under the Apache License, Version 2.0
+		(the "License"); you may not use this file except in compliance with the
+		License. You may obtain a copy of the License at
+
+		http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+		or agreed to in writing, software distributed under the License is distributed
+		on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+		express or implied. See the License for the specific language governing
+		permissions and limitations under the License
+	-->
+
+	<xe:applicationLayout id="applicationLayout1">
+		<xp:callback facetName="facetMiddle" id="facetMiddle"></xp:callback>
+		<xp:this.facets>
+			<xe:navigator id="navigator1" xp:key="LeftColumn">
+				<xe:this.treeNodes>
+					<xe:pageTreeNode label="Home" page="/Home.xsp"></xe:pageTreeNode>
+					<xe:pageTreeNode label="Key Dates" page="/ByDate.xsp"></xe:pageTreeNode>
+					<xe:pageTreeNode label="Calendar" page="/Calendar.xsp"></xe:pageTreeNode>
+					<xe:pageTreeNode label="By Customer" page="/ByCustomer.xsp"></xe:pageTreeNode>
+				</xe:this.treeNodes>
+			</xe:navigator>
+		</xp:this.facets>
+		<xe:this.configuration>
+			<xe:bootstrapResponsiveConfiguration titleBarName="Key Dates">
+			</xe:bootstrapResponsiveConfiguration>
+		</xe:this.configuration>
+	</xe:applicationLayout></xp:view>

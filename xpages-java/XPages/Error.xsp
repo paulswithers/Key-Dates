@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xc="http://www.ibm.com/xsp/custom" pageTitle="Error">
+
+	<!--
+		Copyright 2015 Paul Withers Licensed under the Apache License, Version 2.0
+		(the "License"); you may not use this file except in compliance with the
+		License. You may obtain a copy of the License at
+		
+		http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+		or agreed to in writing, software distributed under the License is distributed
+		on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+		express or implied. See the License for the specific language governing
+		permissions and limitations under the License
+	-->
+
+	<div class="lotusFrame">
+		<div class="lotusBanner" role="banner">
+			<div class="lotusRightCorner">
+				<div class="lotusInner">
+					<span
+						style="float:left;vertical-align:middle;margin-right: 5px;">
+					</span>
+				</div>
+			</div>
+		</div>
+		<div class="lotusTitleBar">
+			<div class="lotusRightCorner">
+				<div class="lotusInner">
+					<div class="lotusTitleBarContent">
+						<xp:text escape="true" id="computedField1"
+							styleClass="lotusEllipsis" value="#{database.title}" tagName="h2">
+						</xp:text>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="lotusMain">
+			<xp:image url="/.ibmxspres/domino/oneuiv2/images/iconError48.png"
+				id="image2" alt="Error" style="float:right">
+			</xp:image>
+			<h1>I'm sorry, a problem has occurred</h1>
+			<p>
+				An error occurred during the processing. Click the refresh
+				button to reload the page.
+			</p>
+			<button class="mainBtn" type="button"
+				onclick="window.location.reload()">
+				Reload Page
+			</button>
+			<br />
+			<br />
+			<a href="#" id="expandLink"
+				onclick="dojo.style('#{id:errMsg}','display','block');
+						dojo.style('expandLink','display','none');dojo.style('collapseLink','display','block');">
+				Show detailed error
+			</a>
+			<a href="#" id="collapseLink" style="display:none"
+				onclick="dojo.style('#{id:errMsg}','display','none');
+						dojo.style('expandLink','display','block');dojo.style('collapseLink','display','none');">
+				Hide detailed error
+			</a>
+			<br />
+			<xp:text value="#{requestScope.error}" escape="true" id="errMsg"
+				style="display:none">
+			</xp:text>
+		</div>
+	</div>
+</xp:view>

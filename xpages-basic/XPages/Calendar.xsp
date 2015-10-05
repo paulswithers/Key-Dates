@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xc="http://www.ibm.com/xsp/custom"
+	xmlns:xe="http://www.ibm.com/xsp/coreex">
+	
+	<!--
+		Copyright 2015 Paul Withers Licensed under the Apache License, Version 2.0
+		(the "License"); you may not use this file except in compliance with the
+		License. You may obtain a copy of the License at
+
+		http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law
+		or agreed to in writing, software distributed under the License is distributed
+		on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+		express or implied. See the License for the specific language governing
+		permissions and limitations under the License
+	-->
+
+	<xc:appLayout>
+		<xp:this.facets>
+			<xp:div xp:key="facetMiddle">
+				<xe:restService id="restService1" preventDojoStore="false"
+					pathInfo="/calView" jsId="calStore">
+					<xe:this.service>
+						<xe:calendarJsonLegacyService viewName="KeyDatesCal"
+							var="ent" contentType="text/plain" colCalendarDate="date"
+							colSubject="title">
+						</xe:calendarJsonLegacyService>
+					</xe:this.service>
+				</xe:restService>
+				<xe:djextImageSelect id="djextImageSelect1" title="Select a value default is two days"
+						value="#{viewScope.calendarType}" defaultValue="W">
+						<xe:this.imageValues>
+							<xe:selectImage selectedValue="D"
+								selectedImage="/.ibmxspres/.extlib/icons/calendar/1_Day_selected_24.gif"
+								image="/.ibmxspres/.extlib/icons/calendar/1_Day_deselected_24.gif"
+								imageAlt="One Day" title="One Day">
+							</xe:selectImage>
+							<xe:selectImage selectedValue="T"
+								selectedImage="/.ibmxspres/.extlib/icons/calendar/2_Days_selected_24.gif"
+								image="/.ibmxspres/.extlib/icons/calendar/2_Days_deselected_24.gif"
+								imageAlt="Two Days" title="Two Days">
+							</xe:selectImage>
+							<xe:selectImage selectedValue="F"
+								selectedImage="/.ibmxspres/.extlib/icons/calendar/1_Work_Week_selected_24.gif"
+								image="/.ibmxspres/.extlib/icons/calendar/1_Work_Week_deselected_24.gif"
+								imageAlt="One Work Week" title="One Work Week">
+							</xe:selectImage>
+							<xe:selectImage selectedValue="W"
+								selectedImage="/.ibmxspres/.extlib/icons/calendar/1_Week_selected_24.gif"
+								image="/.ibmxspres/.extlib/icons/calendar/1_Week_deselected_24.gif"
+								imageAlt="One Week" title="one Week">
+							</xe:selectImage>
+							<xe:selectImage selectedValue="2"
+								selectedImage="/.ibmxspres/.extlib/icons/calendar/2_Weeks_selected_24.gif"
+								image="/.ibmxspres/.extlib/icons/calendar/2_Weeks_deselected_24.gif"
+								imageAlt="Two Weeks" title="Two Weeks">
+							</xe:selectImage>
+							<xe:selectImage selectedValue="M"
+								selectedImage="/.ibmxspres/.extlib/icons/calendar/Month_selected_24.gif"
+								image="/.ibmxspres/.extlib/icons/calendar/Month_deselected_24.gif"
+								imageAlt="One Month" title="One Month">
+							</xe:selectImage>
+							<xe:selectImage selectedValue="Y"
+								selectedImage="/.ibmxspres/.extlib/icons/calendar/All_Entries_selected_24.gif"
+								image="/.ibmxspres/.extlib/icons/calendar/All_Entries_deselected_24.gif"
+								imageAlt="All Entries">
+							</xe:selectImage>
+						</xe:this.imageValues>
+						<xp:eventHandler event="onClick" submit="true"
+							refreshMode="partial" refreshId="calendarView1">
+						</xp:eventHandler>
+					</xe:djextImageSelect>
+				<xe:calendarView id="calendarView1" jsId="calStore"
+					type="#{javascript: null == viewScope.calendarType? 'W' : viewScope.calendarType }"
+					storeComponentId="restService1">
+				</xe:calendarView>
+			</xp:div>
+		</xp:this.facets>
+	</xc:appLayout>
+</xp:view>
