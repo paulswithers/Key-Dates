@@ -35,5 +35,15 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/withersp/.m2/repository/com/vaadin/vaadin-server/7.5.0/vaadin-server-7.5.0.jar">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="org.eclipse.jst.component.archivename" value="vaadin-server-7.5.0.jar"/>
+			<attribute name="maven.groupId" value="com.vaadin"/>
+			<attribute name="maven.artifactId" value="vaadin-server"/>
+			<attribute name="maven.version" value="7.5.0"/>
+			<attribute name="maven.scope" value="compile"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

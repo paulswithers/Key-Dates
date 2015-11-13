@@ -47,8 +47,7 @@ import uk.co.intec.keyDatesApp.pages.MainView;
 /**
  * @author Paul Withers<br/>
  *         <br/>
- *         This is the application page for Vaadin. Switching navigation options
- *         just loads a different "page" or <i>View</i> onto the body area.
+ *         This is the application page for Vaadin. Switching navigation options just loads a different "page" or <i>View</i> onto the body area.
  *         Extends Vaadin UI class.
  */
 @Viewport("user-scalable=no,initial-scale=1.0")
@@ -130,8 +129,7 @@ public class MainUI extends UI {
 	}
 
 	/**
-	 * Adds a new View to the Navigator and adds a new menu option to the
-	 * Header's menu bar. The default View should have a viewName set as "". New
+	 * Adds a new View to the Navigator and adds a new menu option to the Header's menu bar. The default View should have a viewName set as "". New
 	 * Views and menu options should be added in the {@link init} method
 	 *
 	 * @param viewName

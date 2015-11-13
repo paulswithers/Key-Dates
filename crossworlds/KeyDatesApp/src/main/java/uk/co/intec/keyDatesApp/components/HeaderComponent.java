@@ -109,8 +109,7 @@ public class HeaderComponent extends VerticalLayout {
 	/**
 	 * Getter for menubar
 	 *
-	 * @return MenuBar allows external access to the menu bar created and added
-	 *         to the header
+	 * @return MenuBar allows external access to the menu bar created and added to the header
 	 */
 	public MenuBar getMenubar() {
 		return menubar;
